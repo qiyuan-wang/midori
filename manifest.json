@@ -1,0 +1,40 @@
+{
+	"manifest_version": 2,
+	"name": "DX-Player",
+	"description": "Douban music to Xiami",
+  "page_action": {
+    "default_title": "DX-Player",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "page":"background.html"
+  },
+  "permissions": [
+    "http://www.xiami.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["http://music.douban.com/*"],
+      "js": ["jquery-1.10.1.min.js", "content_script.js"],
+      "css": ["content_script.css"],
+      "run_at": "document_end"
+    },
+    {
+      "matches": ["http://www.xiami.com/song/playlist/id/*"],
+      "js": ["jquery-1.10.1.min.js", "playlist.js"],
+      "run_at": "document_end",
+      "all_frames": true
+    }
+  ],
+  "web_accessible_resources": [
+    "images/pause.png",
+    "images/pause_hover.png",
+    "images/play.png",
+    "images/play_hover.png",
+    "images/next.png",
+    "images/next_hover.png",
+    "images/previous.png",
+    "images/previous_hover.png"
+  ],
+	"version": "0.0.1"
+}
