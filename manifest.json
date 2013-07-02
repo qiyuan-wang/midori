@@ -33,8 +33,8 @@
     "images/play_hover.png",
     "images/next.png",
     "images/next_hover.png",
-    "images/previous.png",
-    "images/previous_hover.png"
+    "images/prev.png",
+    "images/prev_hover.png"
   ],
 	"version": "0.0.1"
 }

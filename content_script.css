@@ -36,10 +36,10 @@ div#dx_progress {
   background-color: #B61710;
 }
 
-div.dx_small_icon {
+div.dx_icon {
   float: left;
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
   margin: 5px 0 5px 10px;
   -webkit-transition: background 0.3s ease;
 }
@@ -47,11 +47,17 @@ div.dx_small_icon {
 div#panel {
   float:left;
 }
+
+div#dx_next {
+  background-image:url('chrome-extension://__MSG_@@extension_id__/next.png');
+}
+
+div#dx_prev {
+  background-image:url('chrome-extension://__MSG_@@extension_id__/prev.png');
+}
+
 div#dx_play_pause {
-  float: left;
-  width: 30px;
-  height: 30px;
-  -webkit-transition: background 0.3s ease;
+  background-image:url('chrome-extension://__MSG_@@extension_id__/pause.png');
 }
 
 div#dx_info {

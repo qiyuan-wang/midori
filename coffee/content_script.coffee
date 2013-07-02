@@ -44,14 +44,17 @@ createPlayerDOM = ->
   
   play_pause = document.createElement('div')
   play_pause.id = "dx_play_pause"
+  play_pause.className = "dx_icon"
+  
   
   next_song = document.createElement('div')
   next_song.id = "dx_next"
-  next_song.className = "dx_small_icon"
+  next_song.className = "dx_icon"
   
   previous_song = document.createElement('div')
-  previous_song.id = "dx_previous"
-  previous_song.className = "dx_small_icon"
+  previous_song.id = "dx_prev"
+  previous_song.className = "dx_icon"
+  
   
   panel.appendChild play_pause
   panel.appendChild next_song 
@@ -99,42 +102,20 @@ updateProgress = ->
 toggleMusic = ->
   if audio.paused
     audio.play()
-    $(play_pause).css('background-image', getBackgroundImageURL('images/pause_hover.png'))
-    $(play_pause).hover \
-      (-> $(this).css('background-image', getBackgroundImageURL('images/pause_hover.png'))),
-      (-> $(this).css('background-image', getBackgroundImageURL('images/pause.png')))
+    play_pause.innerText = "pause"
   else
     audio.pause()
-    $(play_pause).css('background-image', getBackgroundImageURL('images/play_hover.png'))
-    $(play_pause).hover \
-      (-> $(this).css('background-image', getBackgroundImageURL('images/play_hover.png'))),
-      (-> $(this).css('background-image', getBackgroundImageURL('images/play.png')))
+    play_pause.innerText = "play"
 
 setProgress = (played_length) ->
   $(play_progress).css('width', played_length)
 
-getBackgroundImageURL = (url) ->
-  bgURL = 'url(' + chrome.extension.getURL(url) + ')'
-  bgURL
   
 bindButtonsEvents = ->
-  $(play_pause).css('background-image', getBackgroundImageURL('images/pause.png'))
-  $(play_pause).hover \
-    (-> $(this).css('background-image', getBackgroundImageURL('images/pause_hover.png'))),
-    (-> $(this).css('background-image', getBackgroundImageURL('images/pause.png')))
   play_pause.addEventListener "click", toggleMusic, false
-  next_song.addEventListener "click", nextTrack, false
-  $(next_song).css('background-image', getBackgroundImageURL('images/next.png'))
-  $(next_song).hover \
-    (-> $(this).css('background-image', getBackgroundImageURL('images/next_hover.png'))),
-    (-> $(this).css('background-image', getBackgroundImageURL('images/next.png')))
-  
+  next_song.addEventListener "click", nextTrack, false  
   previous_song.addEventListener "click", previousTrack, false
-  $(previous_song).css('background-image', getBackgroundImageURL('images/previous.png'))
-  $(previous_song).hover \
-    (-> $(this).css('background-image', getBackgroundImageURL('images/previous_hover.png'))),
-    (-> $(this).css('background-image', getBackgroundImageURL('images/previous.png')))
-  
+
 removeTryButton = ->
   $('#dx_try_button').remove()
   
