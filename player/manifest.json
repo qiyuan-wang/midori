@@ -33,7 +33,11 @@
     "images/next.png",
     "images/next_hover.png",
     "images/prev.png",
-    "images/prev_hover.png"
+    "images/prev_hover.png",
+    "images/high_vol.png",
+    "images/high_vol_hover.png",
+    "images/low_vol.png",
+    "images/low_vol_hover.png"
   ],
 	"version": "0.0.2"
 }
