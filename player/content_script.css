@@ -94,6 +94,18 @@ div#dx_dec_vol:hover {
   background-image:url('chrome-extension://__MSG_@@extension_id__/images/low_vol_hover.png');
 }
 
+div.dx_normal {
+  background-image:url('chrome-extension://__MSG_@@extension_id__/images/loop.png');
+}
+
+div.dx_normal:hover {
+  background-image:url('chrome-extension://__MSG_@@extension_id__/images/loop_hover.png');
+}
+
+div.dx_loop {
+  background-image:url('chrome-extension://__MSG_@@extension_id__/images/loop_active.png');
+}
+
 div#dx_info {
   float: left;
   margin-left: 15px;

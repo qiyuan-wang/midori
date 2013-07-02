@@ -37,7 +37,10 @@
     "images/high_vol.png",
     "images/high_vol_hover.png",
     "images/low_vol.png",
-    "images/low_vol_hover.png"
+    "images/low_vol_hover.png",
+    "images/loop.png",
+    "images/loop_hover.png",
+    "images/loop_active.png"
   ],
-	"version": "0.0.2"
+	"version": "0.0.3"
 }

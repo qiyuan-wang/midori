@@ -1,6 +1,8 @@
-tracklist = total_tracks = current_track = audio = info = title = play_button = duration = play_progress = play_pause = next_song = previous_song = increase_vol = decrease_vol = ""
+tracklist = total_tracks = current_track = audio = info = title = play_button = duration = play_progress = play_pause = next_song = previous_song = increase_vol = decrease_vol = switch_loop = 0
 
-default_volume = 0.7
+default_volume = 0.5
+
+single_loop = false
 
 queryAlbum = ->
   # get the album info(name and performer)
@@ -65,12 +67,16 @@ createPlayerDOM = ->
   decrease_vol = document.createElement('div')
   decrease_vol.id = "dx_dec_vol"
   decrease_vol.className = "dx_icon"
+    
+  switch_loop = document.createElement('div')
+  switch_loop.className = "dx_normal dx_icon"
   
   panel.appendChild play_pause
   panel.appendChild next_song 
   panel.appendChild previous_song
   panel.appendChild increase_vol
   panel.appendChild decrease_vol
+  panel.appendChild switch_loop
   
   player.appendChild panel
   player.appendChild info
@@ -81,7 +87,7 @@ initPlayer = (song_list)->
   tracklist = song_list
   total_tracks = tracklist.length
   current_track = 0
-  
+  return
 
 loadTrack = (track_number) ->
   track = tracklist[track_number]
@@ -89,8 +95,10 @@ loadTrack = (track_number) ->
   title.innerText = track.artist + " - " + track.title
   audio.autoplay = true
   audio.volume = default_volume
-  audio.addEventListener "ended", nextTrack, false
+  audio.addEventListener "ended", nextTrackAuto, false
   audio.addEventListener "timeupdate", updateProgress, false
+  return
+
 
 nextTrack = ->
   setProgress 0
@@ -98,6 +106,15 @@ nextTrack = ->
   if current_track >= total_tracks
     current_track = 0
   loadTrack current_track
+  return
+
+nextTrackAuto = ->
+  setProgress 0
+  if single_loop
+    loadTrack current_track
+  else
+    nextTrack()
+  return
 
 previousTrack = ->
   setProgress 0
@@ -105,24 +122,30 @@ previousTrack = ->
   if current_track <= -1
     current_track = total_tracks - 1
   loadTrack current_track
+  return
 
 increaseVolume = ->
   default_volume += 0.1
-  if default_volume > 1
-    default_volume = 1
+  if default_volume > 1.0
+    default_volume = 1.0
   audio.volume = default_volume
-
+  console.log default_volume
+  return
+  
 decreaseVolume = ->
   default_volume -= 0.1
-  if default_volume < 0
-    default_volume = 0
+  if default_volume < 0.09
+    default_volume = 0.0
   audio.volume = default_volume
+  console.log default_volume
+  return
 
 updateProgress = ->
   width = parseInt $(duration).css('width')
   percent_played = audio.currentTime / audio.duration
   bar_width = Math.ceil(percent_played * width)
   setProgress bar_width
+  return
 
 toggleMusic = ->
   if audio.paused
@@ -133,10 +156,33 @@ toggleMusic = ->
     audio.pause()
     $(play_pause).removeClass('dx_pause')
     $(play_pause).addClass('dx_play')
+  return
+  
+switchLoop = ->
+  if single_loop
+    single_loop = false
+    $(switch_loop).removeClass("dx_loop").addClass("dx_normal")
+  else
+    single_loop = true
+    $(switch_loop).removeClass("dx_normal").addClass("dx_loop")
 
 setProgress = (played_length) ->
   $(play_progress).css('width', played_length)
+  return
+  
+getDefaultVolume = ->
+  storage.get 'default_volume', (items) ->
+    console.log items
+    if items.default_volume
+      default_volume = items.default_volume
+    else
+      default_volume = 0.7
+  return
 
+setDefaultVolume = (volume) ->
+  console.log volume
+  storage.set "default_volume" : volume
+  return
 
 bindButtonsEvents = ->
   play_pause.addEventListener "click", toggleMusic, false
@@ -144,6 +190,7 @@ bindButtonsEvents = ->
   previous_song.addEventListener "click", previousTrack, false
   increase_vol.addEventListener "click", increaseVolume, false
   decrease_vol.addEventListener "click", decreaseVolume, false
+  switch_loop.addEventListener "click", switchLoop, false
 
 removeTips = ->
   $(tips).remove()
