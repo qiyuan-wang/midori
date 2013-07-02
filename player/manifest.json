@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "DX-Player",
-	"description": "Douban music to Xiami",
+	"description": "Douban music to Xiami, by Qiyuan, http://www.weibo.com/zisasign",
   "page_action": {
     "default_title": "DX-Player"
   },
@@ -13,7 +13,7 @@
   ],
   "content_scripts": [
     {
-      "matches": ["http://music.douban.com/*"],
+      "matches": ["http://music.douban.com/subject/*"],
       "js": ["jquery-1.10.1.min.js", "content_script.js"],
       "css": ["content_script.css"],
       "run_at": "document_end"
