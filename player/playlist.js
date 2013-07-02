@@ -39,7 +39,9 @@ playlist = {};
 
 tracks = $('track');
 
-if (tracks.lengh !== 0) {
+console.log(tracks);
+
+if (tracks.length !== 0) {
   songs = [];
   tracks.each(function() {
     var track, track_info;
@@ -50,6 +52,7 @@ if (tracks.lengh !== 0) {
       album: track.find('album_name').text(),
       location: decode(track.find('location').text())
     };
+    console.log(track_info.location);
     return songs.push(track_info);
   });
   playlist = {
@@ -58,6 +61,7 @@ if (tracks.lengh !== 0) {
     album_id: $('playlist').find('type_id').text(),
     songs: songs
   };
+  console.log(songs);
 } else {
   playlist = {
     type: "track search",
@@ -65,4 +69,4 @@ if (tracks.lengh !== 0) {
   };
 }
 
-chrome.runtime.sendMessage(playlist, function(response) {});
+chrome.runtime.sendMessage(playlist);

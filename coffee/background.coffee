@@ -26,24 +26,31 @@ chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
     xhr = new XMLHttpRequest()
     xhr.open "GET", query_url+query_item, true
     xhr.onreadystatechange = ->
-      if xhr.readyState == 4 && xhr.status == 200
-        console.log xhr.responseText
-        resp = xhr.responseText.match(/\/album\/(\d+)/g)
-        if resp != ""
+      if xhr.readyState == 4
+        if xhr.status == 200
+          resp = xhr.responseText.match(/\/album\/(\d+)/g)
+          console.log "resp "+ resp
           album = RegExp.$1
-          createFrame album, tab
-        else  
-          sendResponse {status: "not found"}
+          console.log "album is" + album
+          if resp != "" && album != ""
+            createFrame album, tab
+          else
+            sendResponse {status: "not found"}
+        else
+          console.log xhr.statusText
+          sendResponse {status: "network fail"}
     xhr.send()
     return true
   if request.type == "track search"
-    iframes = $('iframe')
-    tab = ""
-    iframes.each (index)->
-      if this.src.indexOf(request.album_id) != -1
-        tab = this.id
-        $(this).remove()
-    tab = parseInt(tab, 10)
+    iframe = $('iframe')[0]
+    tab = parseInt iframe.id
+    $(iframe).remove()
+    # iframes.each (index)->
+    #   console.log this.id
+    #   if this.src.indexOf(request.album_id) != -1
+    #     
+    #     tab = parseInt(this.id, 10)
+    #     $(this).remove()
     if request.status == "ready"
       msg =
         status: "found"
@@ -51,6 +58,7 @@ chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
     else if request.status == "not found"
       msg = 
         status: "not found"
+    console.log tab, msg
     chrome.tabs.sendMessage tab, msg
         
 

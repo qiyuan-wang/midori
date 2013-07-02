@@ -20,7 +20,7 @@ createFrame = function(album_id, tab_id) {
 };
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  var iframes, msg, query_item, tab, xhr;
+  var iframe, msg, query_item, tab, xhr;
   if (request.type === "query") {
     query_item = request.performer + " " + request.album;
     query_item = simplify(query_item.toLowerCase());
@@ -32,15 +32,23 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     xhr.open("GET", query_url + query_item, true);
     xhr.onreadystatechange = function() {
       var album, resp;
-      if (xhr.readyState === 4 && xhr.status === 200) {
-        console.log(xhr.responseText);
-        resp = xhr.responseText.match(/\/album\/(\d+)/g);
-        if (resp !== "") {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          resp = xhr.responseText.match(/\/album\/(\d+)/g);
+          console.log("resp " + resp);
           album = RegExp.$1;
-          return createFrame(album, tab);
+          console.log("album is" + album);
+          if (resp !== "" && album !== "") {
+            return createFrame(album, tab);
+          } else {
+            return sendResponse({
+              status: "not found"
+            });
+          }
         } else {
+          console.log(xhr.statusText);
           return sendResponse({
-            status: "not found"
+            status: "network fail"
           });
         }
       }
@@ -49,15 +57,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     return true;
   }
   if (request.type === "track search") {
-    iframes = $('iframe');
-    tab = "";
-    iframes.each(function(index) {
-      if (this.src.indexOf(request.album_id) !== -1) {
-        tab = this.id;
-        return $(this).remove();
-      }
-    });
-    tab = parseInt(tab, 10);
+    iframe = $('iframe')[0];
+    tab = parseInt(iframe.id);
+    $(iframe).remove();
     if (request.status === "ready") {
       msg = {
         status: "found",
@@ -68,6 +70,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         status: "not found"
       };
     }
+    console.log(tab, msg);
     return chrome.tabs.sendMessage(tab, msg);
   }
 });

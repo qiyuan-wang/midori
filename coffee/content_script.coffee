@@ -1,18 +1,20 @@
-tracklist = total_tracks = current_track = audio = info = title = play_button = duration = play_progress = play_pause = next_song = previous_song =
+tracklist = total_tracks = current_track = audio = info = title = play_button = duration = play_progress = play_pause = next_song = previous_song = ""
 
 queryAlbum = ->
   # get the album info(name and performer)
   $album_name = $('#wrapper h1 > span')[0].innerText
   $performer = $('#info span span.pl a')[0].innerText
-  that = this
-  that.innerText = "连接中"
+  $(this).remove()
+  tips.innerText = "连接中"
   query_info =
     type: "query" 
     album: $album_name
     performer: $performer
   chrome.runtime.sendMessage query_info, (response) ->
     if response.status == "not found"
-      that.innerText = "虾米貌似目前还没有这张专辑"
+      $(tips).text("虾米貌似目前还没有这张专辑").removeClass("dx_notice").addClass("dx_warning")
+    else if response.status == "network fail"
+      $(tips).text("网络貌似挂了，刷新下吧").removeClass("dx_notice").addClass("dx_warning")
     return
   return
 
@@ -119,8 +121,8 @@ bindButtonsEvents = ->
   next_song.addEventListener "click", nextTrack, false  
   previous_song.addEventListener "click", previousTrack, false
 
-removeTryButton = ->
-  $('#dx_try_button').remove()
+removeTips = ->
+  $(tips).remove()
   
 # insert the play section
 play_section = document.createElement('div')
@@ -130,7 +132,12 @@ try_button = document.createElement('a')
 try_button.id = "dx_try_button"
 try_button.innerText = "虾米试听"
 
-play_section.appendChild(try_button)
+tips = document.createElement('span')
+tips.id = "tips"
+tips.className = "dx_notice"
+
+play_section.appendChild try_button
+play_section.appendChild tips
 
 # add to page
 $('.related_info').before(play_section)
@@ -141,11 +148,12 @@ $('#dx_try_button').on "click", queryAlbum
 
 chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
   if request.status == "found"
-    removeTryButton()
+    removeTips()
     createPlayerDOM()
     initPlayer request.songs
     loadTrack current_track
     bindButtonsEvents()
   else if request.status == "not found"
-     $('#dx_try_button').innerText = "虾米貌似还没有人发布这张专辑"
+    console.log "here"
+    $(tips).text("虾米貌似还没有人发布这张专辑").removeClass("dx_notice").addClass("dx_warning")
   return

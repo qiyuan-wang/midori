@@ -32,7 +32,8 @@ decode = (source) ->
 
 playlist = {}
 tracks = $('track')
-if tracks.lengh != 0
+console.log tracks
+if tracks.length != 0
   songs = []
   tracks.each ->
     track = $(this)
@@ -41,16 +42,17 @@ if tracks.lengh != 0
       artist: track.find('artist').text(),
       album: track.find('album_name').text(),
       location: decode(track.find('location').text())
+    console.log track_info.location
     songs.push track_info
   playlist =
     type: "track search"
     status: "ready"
     album_id: $('playlist').find('type_id').text()
     songs: songs
+  console.log songs
 else
   playlist =
     type: "track search"
     status: "not found"
-chrome.runtime.sendMessage playlist, (response) ->
-  return
+chrome.runtime.sendMessage playlist
 
