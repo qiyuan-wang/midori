@@ -3,8 +3,7 @@
 	"name": "DX-Player",
 	"description": "Douban music to Xiami",
   "page_action": {
-    "default_title": "DX-Player",
-    "default_popup": "popup.html"
+    "default_title": "DX-Player"
   },
   "background": {
     "page":"background.html"

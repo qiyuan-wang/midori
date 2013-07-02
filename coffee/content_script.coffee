@@ -44,7 +44,8 @@ createPlayerDOM = ->
   
   play_pause = document.createElement('div')
   play_pause.id = "dx_play_pause"
-  play_pause.className = "dx_icon"
+  play_pause.className = "dx_icon dx_pause"
+  
   
   
   next_song = document.createElement('div')
@@ -102,10 +103,12 @@ updateProgress = ->
 toggleMusic = ->
   if audio.paused
     audio.play()
-    play_pause.innerText = "pause"
+    $(play_pause).removeClass('dx_play')
+    $(play_pause).addClass('dx_pause')
   else
     audio.pause()
-    play_pause.innerText = "play"
+    $(play_pause).removeClass('dx_pause')
+    $(play_pause).addClass('dx_play')
 
 setProgress = (played_length) ->
   $(play_progress).css('width', played_length)
