@@ -78,6 +78,21 @@ div#dx_prev:hover {
   background-image:url('chrome-extension://__MSG_@@extension_id__/images/prev_hover.png');
 }
 
+div#dx_inc_vol {
+  background-image:url('chrome-extension://__MSG_@@extension_id__/images/high_vol.png');
+}
+
+div#dx_inc_vol:hover {
+  background-image:url('chrome-extension://__MSG_@@extension_id__/images/high_vol_hover.png');
+}
+
+div#dx_dec_vol {
+  background-image:url('chrome-extension://__MSG_@@extension_id__/images/low_vol.png');
+}
+
+div#dx_dec_vol:hover {
+  background-image:url('chrome-extension://__MSG_@@extension_id__/images/low_vol_hover.png');
+}
 
 div#dx_info {
   float: left;

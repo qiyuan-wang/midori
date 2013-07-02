@@ -1,4 +1,6 @@
-tracklist = total_tracks = current_track = audio = info = title = play_button = duration = play_progress = play_pause = next_song = previous_song = ""
+tracklist = total_tracks = current_track = audio = info = title = play_button = duration = play_progress = play_pause = next_song = previous_song = increase_vol = decrease_vol = ""
+
+default_volume = 0.7
 
 queryAlbum = ->
   # get the album info(name and performer)
@@ -48,8 +50,6 @@ createPlayerDOM = ->
   play_pause.id = "dx_play_pause"
   play_pause.className = "dx_icon dx_pause"
   
-  
-  
   next_song = document.createElement('div')
   next_song.id = "dx_next"
   next_song.className = "dx_icon"
@@ -58,10 +58,19 @@ createPlayerDOM = ->
   previous_song.id = "dx_prev"
   previous_song.className = "dx_icon"
   
+  increase_vol = document.createElement('div')
+  increase_vol.id = "dx_inc_vol"
+  increase_vol.className = "dx_icon"
+  
+  decrease_vol = document.createElement('div')
+  decrease_vol.id = "dx_dec_vol"
+  decrease_vol.className = "dx_icon"
   
   panel.appendChild play_pause
   panel.appendChild next_song 
   panel.appendChild previous_song
+  panel.appendChild increase_vol
+  panel.appendChild decrease_vol
   
   player.appendChild panel
   player.appendChild info
@@ -79,6 +88,7 @@ loadTrack = (track_number) ->
   audio.src = track.location
   title.innerText = track.artist + " - " + track.title
   audio.autoplay = true
+  audio.volume = default_volume
   audio.addEventListener "ended", nextTrack, false
   audio.addEventListener "timeupdate", updateProgress, false
 
@@ -95,6 +105,18 @@ previousTrack = ->
   if current_track <= -1
     current_track = total_tracks - 1
   loadTrack current_track
+
+increaseVolume = ->
+  default_volume += 0.1
+  if default_volume > 1
+    default_volume = 1
+  audio.volume = default_volume
+
+decreaseVolume = ->
+  default_volume -= 0.1
+  if default_volume < 0
+    default_volume = 0
+  audio.volume = default_volume
 
 updateProgress = ->
   width = parseInt $(duration).css('width')
@@ -115,11 +137,13 @@ toggleMusic = ->
 setProgress = (played_length) ->
   $(play_progress).css('width', played_length)
 
-  
+
 bindButtonsEvents = ->
   play_pause.addEventListener "click", toggleMusic, false
   next_song.addEventListener "click", nextTrack, false  
   previous_song.addEventListener "click", previousTrack, false
+  increase_vol.addEventListener "click", increaseVolume, false
+  decrease_vol.addEventListener "click", decreaseVolume, false
 
 removeTips = ->
   $(tips).remove()
