@@ -13,7 +13,7 @@ getAlbumId = (request_album_name, link_tags) ->
   if link_tags.length != 0
     # Chinese traditional to simplified
     request_album_name = simplify request_album_name
-    # lowercase, replace " and other note
+    # lowercase, replace " and other puncs
     request_album_name = formatAlbumName request_album_name
     console.log "request_album_name: " + request_album_name
     link_tags.each ->
@@ -40,7 +40,7 @@ chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
     console.log "orginal query item: " + query_item
     # Chinese traditional to simplified
     query_item = simplify query_item
-    # lowercase, replace " and other note
+    # lowercase, replace " and other puncs
     query_item = formatAlbumName query_item
     console.log query_item 
     query_item = query_item.replace(/\s/g, '+').replace(/[+]{2,}/g, '+')
