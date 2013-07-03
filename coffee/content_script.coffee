@@ -1,6 +1,6 @@
 tracklist = total_tracks = current_track = audio = info = title = play_button = duration = play_progress = play_pause = next_song = previous_song = increase_vol = decrease_vol = switch_loop = 0
 
-default_volume = 0.5
+default_volume = 0.7
 
 single_loop = false
 
