@@ -32,7 +32,6 @@ decode = (source) ->
 
 playlist = {}
 tracks = $('track')
-console.log tracks
 if tracks.length != 0
   songs = []
   tracks.each ->
@@ -49,7 +48,6 @@ if tracks.length != 0
     status: "ready"
     album_id: $('playlist').find('type_id').text()
     songs: songs
-  console.log songs
 else
   playlist =
     type: "track search"
