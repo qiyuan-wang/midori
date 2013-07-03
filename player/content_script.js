@@ -128,7 +128,6 @@ increaseVolume = function() {
     default_volume = 1.0;
   }
   audio.volume = default_volume;
-  console.log(default_volume);
 };
 
 decreaseVolume = function() {
@@ -137,7 +136,6 @@ decreaseVolume = function() {
     default_volume = 0.0;
   }
   audio.volume = default_volume;
-  console.log(default_volume);
 };
 
 updateLoadProgress = function() {
@@ -248,7 +246,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     loadTrack(current_track);
     bindButtonsEvents();
   } else if (request.status === "not found") {
-    console.log("here");
     $(tips).text("虾米貌似还没有人发布这张专辑").removeClass("dx_notice").addClass("dx_warning");
   }
 });

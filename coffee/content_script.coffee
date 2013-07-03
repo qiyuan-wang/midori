@@ -136,7 +136,6 @@ increaseVolume = ->
   if default_volume > 1.0
     default_volume = 1.0
   audio.volume = default_volume
-  console.log default_volume
   return
   
 decreaseVolume = ->
@@ -144,7 +143,6 @@ decreaseVolume = ->
   if default_volume < 0.09
     default_volume = 0.0
   audio.volume = default_volume
-  console.log default_volume
   return
 
 updateLoadProgress = ->
@@ -241,6 +239,5 @@ chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
     loadTrack current_track
     bindButtonsEvents()
   else if request.status == "not found"
-    console.log "here"
     $(tips).text("虾米貌似还没有人发布这张专辑").removeClass("dx_notice").addClass("dx_warning")
   return
