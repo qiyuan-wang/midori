@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "DX-Player",
-	"description": "Douban music to Xiami, by Qiyuan, http://www.weibo.com/zisasign",
+	"description": "Let Xiami music sounded on Douban, by Qiyuan, http://www.weibo.com/zisasign",
   "page_action": {
     "default_title": "DX-Player"
   },
@@ -42,5 +42,5 @@
     "images/loop_hover.png",
     "images/loop_active.png"
   ],
-	"version": "0.4.1"
+	"version": "0.4.2"
 }

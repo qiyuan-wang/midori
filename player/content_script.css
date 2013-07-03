@@ -41,9 +41,14 @@ span#tips {
 div#dx_duration {
   width: 250px;
   height: 2px;
-  background-color: #D4F1E2;
+  background-color: #E5FAEF;
 }
 
+div#dx_load_progress {
+  width: 0px;
+  height: 2px;
+  background-color: #D4F1E2;
+}
 div#dx_progress {
   width: 0px;
   height: 2px;

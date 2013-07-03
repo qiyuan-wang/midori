@@ -1,4 +1,4 @@
-tracklist = total_tracks = current_track = audio = info = title = play_button = duration = play_progress = play_pause = next_song = previous_song = increase_vol = decrease_vol = switch_loop = 0
+tracklist = total_tracks = current_track = audio = info = title = play_button = duration = load_progress = play_progress = play_pause = next_song = previous_song = increase_vol = decrease_vol = switch_loop = 0
 
 default_volume = 0.7
 
@@ -36,10 +36,16 @@ createPlayerDOM = ->
   
   duration = document.createElement('div')
   duration.id = "dx_duration"
+  
+  load_progress = document.createElement('div')
+  load_progress.id = "dx_load_progress"
+  
   play_progress = document.createElement('div')
   play_progress.id = "dx_progress"
   
-  duration.appendChild play_progress
+  load_progress.appendChild play_progress
+  
+  duration.appendChild load_progress
   
   info.appendChild title
   info.appendChild audio
@@ -97,6 +103,7 @@ loadTrack = (track_number) ->
   audio.volume = default_volume
   audio.addEventListener "ended", nextTrackAuto, false
   audio.addEventListener "timeupdate", updateProgress, false
+  audio.addEventListener "progress", updateLoadProgress, false
   return
 
 
@@ -138,6 +145,15 @@ decreaseVolume = ->
     default_volume = 0.0
   audio.volume = default_volume
   console.log default_volume
+  return
+
+updateLoadProgress = ->
+  if audio.buffered != undefined && audio.buffered.length != 0
+    width = parseInt $(duration).css('width')
+    console.log audio.buffered
+    percent_loaded = audio.buffered.end(0) / audio.duration
+    bar_width = Math.ceil(percent_loaded * width)
+    $(load_progress).css('width', bar_width)
   return
 
 updateProgress = ->
