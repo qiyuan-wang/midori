@@ -103,7 +103,7 @@ nextTrack = function() {
 nextTrackAuto = function() {
   setProgress(0);
   if (single_loop) {
-    loadTrack(current_track);
+    audio.play();
   } else {
     nextTrack();
   }
