@@ -218,11 +218,9 @@ play_section = document.createElement('div');
 
 play_section.id = "dx_section";
 
-try_button = document.createElement('a');
+try_button = document.createElement('div');
 
 try_button.id = "dx_try_button";
-
-try_button.innerText = "虾米试听";
 
 tips = document.createElement('span');
 

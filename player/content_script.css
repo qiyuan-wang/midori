@@ -9,15 +9,16 @@ div#dx_player {
   height: 40px;
 }
 
-a#dx_try_button {
+div#dx_try_button {
   display: inline-block;
-  height: 20px;
-  line-height: 20px;
-  text-align: center;
-  width: 60px;
-  margin: 10px 0;
-  color: rgb(255, 255, 255);
-  background-color: green;
+  height: 40px;
+  width: 40px;
+  -webkit-transition: background 0.3s ease;
+  background-image:url('chrome-extension://__MSG_@@extension_id__/images/logo.png');
+}
+
+div#dx_try_button:hover {
+  background-image:url('chrome-extension://__MSG_@@extension_id__/images/logo_hover.png');
 }
 
 .dx_warning {
@@ -25,15 +26,13 @@ a#dx_try_button {
 }
 
 .dx_notice {
-  color: green;
+  color: #81BB9D;
 }
-a#dx_try_button:hover {
-  background-color: black;
-}
+
 
 span#tips {
   display: inline-block;
-  padding: 2px 10px;
+  padding: 12px;
 }
 
 

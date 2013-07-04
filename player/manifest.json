@@ -1,9 +1,16 @@
 {
 	"manifest_version": 2,
 	"name": "DX-Player",
-	"description": "Let Xiami music sounded on Douban, by Qiyuan, http://www.weibo.com/zisasign",
+	"description": "Let Xiami music be heard on Douban, by Qiyuan, http://www.weibo.com/zisasign",
   "page_action": {
-    "default_title": "DX-Player"
+    "default_title": "Midori Player",
+    "default_icon": {
+          "19": "images/icon19.png",
+          "38": "images/icon38.png"
+        }
+  },
+  "icons": {
+    "48": "images/icon48.png"
   },
   "background": {
     "page":"background.html"
@@ -40,7 +47,9 @@
     "images/low_vol_hover.png",
     "images/loop.png",
     "images/loop_hover.png",
-    "images/loop_active.png"
+    "images/loop_active.png",
+    "images/logo_hover.png",
+    "images/logo.png"
   ],
-	"version": "0.4.2"
+	"version": "0.5.0"
 }
