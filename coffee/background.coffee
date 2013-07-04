@@ -77,7 +77,15 @@ chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
         status: "not found"
     console.log msg
     chrome.tabs.sendMessage tab, msg
-        
+    return true
 
+
+# show the page action icon only on music.douban.com/subject/ pages
+showPageAction = (tabId, changeInfo, tab)->
+  if tab.url.indexOf('music.douban.com\/subject\/') != -1
+    chrome.pageAction.show(tabId)
+  return
+
+chrome.tabs.onUpdated.addListener(showPageAction)
       
   

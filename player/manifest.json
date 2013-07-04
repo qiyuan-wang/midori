@@ -1,6 +1,6 @@
 {
 	"manifest_version": 2,
-	"name": "DX-Player",
+	"name": "Midori Player",
 	"description": "Let Xiami music be heard on Douban, by Qiyuan, http://www.weibo.com/zisasign",
   "page_action": {
     "default_title": "Midori Player",
@@ -16,6 +16,7 @@
     "page":"background.html"
   },
   "permissions": [
+    "tabs",
     "http://www.xiami.com/*"
   ],
   "content_scripts": [
