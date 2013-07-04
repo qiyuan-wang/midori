@@ -4,10 +4,26 @@ default_volume = 0.7
 
 single_loop = false
 
+is_playing = true
+
+# douban
+getPerformer = ->
+  performer = ""
+  $element = $('#info > span > span.pl').filter( -> return $(this).text().match(/表演者/))
+  if $element.length != 0
+    $performers = $element.children()
+    if $performers.length == 1
+      performer = $performers.text()
+    else
+      $performers.each ->
+        performer += this.innerText + " "
+  console.log performer
+  performer
+
 queryAlbum = ->
   # get the album info(name and performer)
   $album_name = $('#wrapper h1 > span')[0].innerText
-  $performer = $('#info span span.pl a')[0].innerText
+  $performer = getPerformer()
   $(this).remove()
   tips.innerText = "连接中"
   query_info =
@@ -99,11 +115,12 @@ loadTrack = (track_number) ->
   track = tracklist[track_number]
   audio.src = track.location
   title.innerText = track.artist + " - " + track.title
-  audio.autoplay = true
   audio.volume = default_volume
   audio.addEventListener "ended", nextTrackAuto, false
   audio.addEventListener "timeupdate", updateProgress, false
   audio.addEventListener "progress", updateLoadProgress, false
+  if is_playing == true
+    audio.play()
   return
 
 
@@ -162,7 +179,7 @@ updateProgress = ->
   return
 
 toggleMusic = ->
-  if audio.paused
+  if is_playing == false
     audio.play()
     $(play_pause).removeClass('dx_play')
     $(play_pause).addClass('dx_pause')
@@ -170,7 +187,9 @@ toggleMusic = ->
     audio.pause()
     $(play_pause).removeClass('dx_pause')
     $(play_pause).addClass('dx_play')
+  is_playing = !is_playing 
   return
+  
   
 switchLoop = ->
   if single_loop

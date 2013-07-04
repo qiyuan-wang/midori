@@ -12,20 +12,27 @@ formatAlbumName = function(name_string) {
 };
 
 getAlbumId = function(request_album_name, link_tags) {
-  var id;
+  var id, title;
   id = "";
   if (link_tags.length !== 0) {
     request_album_name = simplify(request_album_name);
     request_album_name = formatAlbumName(request_album_name);
     console.log("request_album_name: " + request_album_name);
-    link_tags.each(function() {
-      var title;
-      title = formatAlbumName(this.title);
+    if (link_tags.length === 1) {
+      title = formatAlbumName(link_tags[0].title);
       console.log("title: " + title);
       if (title.indexOf(request_album_name) !== -1) {
-        id = this.href.match(/\/album\/(\d+)/)[1];
+        id = link_tags[0].href.match(/\/album\/(\d+)/)[1];
       }
-    });
+    } else {
+      link_tags.each(function() {
+        title = formatAlbumName(this.title);
+        console.log("title: " + title);
+        if (title === request_album_name) {
+          id = this.href.match(/\/album\/(\d+)/)[1];
+        }
+      });
+    }
   }
   return id;
 };
