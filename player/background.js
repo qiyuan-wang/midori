@@ -8,7 +8,7 @@ player_url = 'http://www.xiami.com/song/playlist/id/{album_id}/type/1';
 playlist = [];
 
 formatAlbumName = function(name_string) {
-  return name_string.toLowerCase().replace(/[\"\-\|&@#。·]/g, '').replace(/[\s]{2,}/g, ' ');
+  return name_string.toLowerCase().replace(/[\"\-\|&@#。·]/g, '').replace(/\s{0,3}(\[.+\]|\(.+\))$/, "").replace(/[\s]{2,}/g, ' ');
 };
 
 getAlbumId = function(request_album_name, link_tags) {
@@ -21,7 +21,9 @@ getAlbumId = function(request_album_name, link_tags) {
     if (link_tags.length === 1) {
       title = formatAlbumName(link_tags[0].title);
       console.log("title: " + title);
+      console.log(title.indexOf(request_album_name));
       if (title.indexOf(request_album_name) !== -1) {
+        console.log(link_tags[0]);
         id = link_tags[0].href.match(/\/album\/(\d+)/)[1];
       }
     } else {
@@ -30,6 +32,7 @@ getAlbumId = function(request_album_name, link_tags) {
         console.log("title: " + title);
         if (title === request_album_name) {
           id = this.href.match(/\/album\/(\d+)/)[1];
+          return console.log(id);
         }
       });
     }

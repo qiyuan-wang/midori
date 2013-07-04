@@ -5,7 +5,7 @@ player_url = 'http://www.xiami.com/song/playlist/id/{album_id}/type/1'
 playlist = []
 
 formatAlbumName = (name_string) ->
-  return name_string.toLowerCase().replace(/[\"\-\|&@#。·]/g, '').replace(/[\s]{2,}/g, ' ')
+  return name_string.toLowerCase().replace(/[\"\-\|&@#。·]/g, '').replace(/\s{0,3}(\[.+\]|\(.+\))$/, "").replace(/[\s]{2,}/g, ' ')
 
 # new method to get album id, 
 getAlbumId = (request_album_name, link_tags) ->
@@ -21,7 +21,9 @@ getAlbumId = (request_album_name, link_tags) ->
       title = formatAlbumName link_tags[0].title
       console.log "title: " + title
       # just include
+      console.log title.indexOf(request_album_name)
       if title.indexOf(request_album_name) != -1
+        console.log link_tags[0]
         id = link_tags[0].href.match(/\/album\/(\d+)/)[1]
     else
       link_tags.each ->
@@ -30,7 +32,7 @@ getAlbumId = (request_album_name, link_tags) ->
         # more strict on comparision: must equal
         if title == request_album_name    
           id = this.href.match(/\/album\/(\d+)/)[1]
-          return
+          console.log id
   return id
 
 createFrame = (album_id, tab_id) ->
