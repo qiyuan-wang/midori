@@ -23,7 +23,6 @@ getAlbumId = (request_album_name, link_tags) ->
       # just include
       console.log title.indexOf(request_album_name)
       if title.indexOf(request_album_name) != -1
-        console.log link_tags[0]
         id = link_tags[0].href.match(/\/album\/(\d+)/)[1]
     else
       link_tags.each ->
@@ -32,7 +31,7 @@ getAlbumId = (request_album_name, link_tags) ->
         # more strict on comparision: must equal
         if title == request_album_name    
           id = this.href.match(/\/album\/(\d+)/)[1]
-          console.log id
+          # console.log id
   return id
 
 createFrame = (album_id, tab_id) ->
@@ -53,7 +52,6 @@ chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
     query_item = simplify query_item
     # lowercase, replace " and other puncs
     query_item = formatAlbumName query_item
-    console.log query_item 
     query_item = query_item.replace(/\s/g, '+').replace(/[+]{2,}/g, '+')
     query_item = encodeURIComponent(query_item)
     console.log query_url+query_item
@@ -86,7 +84,7 @@ chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
     else if request.status == "not found"
       msg = 
         status: "not found"
-    console.log msg
+    # console.log msg
     chrome.tabs.sendMessage tab, msg
     return true
 

@@ -17,7 +17,6 @@ getPerformer = ->
     else
       $performers.each ->
         performer += this.innerText + " "
-  console.log performer
   performer
 
 queryAlbum = ->
@@ -165,7 +164,6 @@ decreaseVolume = ->
 updateLoadProgress = ->
   if audio.buffered != undefined && audio.buffered.length != 0
     width = parseInt $(duration).css('width')
-    console.log audio.buffered
     percent_loaded = audio.buffered.end(0) / audio.duration
     bar_width = Math.ceil(percent_loaded * width)
     $(load_progress).css('width', bar_width)
@@ -202,20 +200,7 @@ switchLoop = ->
 setProgress = (played_length) ->
   $(play_progress).css('width', played_length)
   return
-  
-getDefaultVolume = ->
-  storage.get 'default_volume', (items) ->
-    console.log items
-    if items.default_volume
-      default_volume = items.default_volume
-    else
-      default_volume = 0.7
-  return
 
-setDefaultVolume = (volume) ->
-  console.log volume
-  storage.set "default_volume" : volume
-  return
 
 bindButtonsEvents = ->
   play_pause.addEventListener "click", toggleMusic, false

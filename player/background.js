@@ -23,7 +23,6 @@ getAlbumId = function(request_album_name, link_tags) {
       console.log("title: " + title);
       console.log(title.indexOf(request_album_name));
       if (title.indexOf(request_album_name) !== -1) {
-        console.log(link_tags[0]);
         id = link_tags[0].href.match(/\/album\/(\d+)/)[1];
       }
     } else {
@@ -31,8 +30,7 @@ getAlbumId = function(request_album_name, link_tags) {
         title = formatAlbumName(this.title);
         console.log("title: " + title);
         if (title === request_album_name) {
-          id = this.href.match(/\/album\/(\d+)/)[1];
-          return console.log(id);
+          return id = this.href.match(/\/album\/(\d+)/)[1];
         }
       });
     }
@@ -57,7 +55,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     console.log("orginal query item: " + query_item);
     query_item = simplify(query_item);
     query_item = formatAlbumName(query_item);
-    console.log(query_item);
     query_item = query_item.replace(/\s/g, '+').replace(/[+]{2,}/g, '+');
     query_item = encodeURIComponent(query_item);
     console.log(query_url + query_item);
@@ -103,7 +100,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         status: "not found"
       };
     }
-    console.log(msg);
     chrome.tabs.sendMessage(tab, msg);
     return true;
   }
