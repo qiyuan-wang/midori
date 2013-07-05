@@ -1,0 +1,10 @@
+# chrome extension permission
+*.pem
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+ehthumbs.db
+Thumbs.db
