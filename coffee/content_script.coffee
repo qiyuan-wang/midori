@@ -14,17 +14,26 @@ getPerformer = ->
     $performers = $element.children()
     if $performers.length == 1
       performer = $performers.text()
-    else
-      $performers.each ->
-        performer += this.innerText + " "
+
+  #### dump this query string if more than one performers. this is bad for some albums.
+    # else
+      # $performers.each ->
+        # performer += this.innerText + " "
   # remove any 'soundtrack' and 'various artists'
   performer = performer.replace(/(original\s)?(motion picture\s)?soundtrack/i, "").replace(/various\s?artist(s)?/i, "").replace(/\s$/g, '')
   console.log "performer: " + performer
   performer
 
+getAlbumName = ->
+  album_name = $('#wrapper h1 > span')[0].innerText
+  # 1. remove 'original soundtrak' kinds of thing from album name
+  # 2. remove 'ost', 'ep' etc.
+  return album_name.replace(/(:\s)?(music from the\s)?(original\s)?motion picture(\ssoundtrack)?(\sscore)?/i, "").replace(/(ost)|(ep)|(lp)/i, "")
+
 queryAlbum = ->
   # get the album info(name and performer)
-  $album_name = $('#wrapper h1 > span')[0].innerText
+  $album_name = getAlbumName()
+  console.log "album name: " + $album_name
   $performer = getPerformer()
   $(this).remove()
   tips.innerText = "连接中"
