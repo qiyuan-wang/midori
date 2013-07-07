@@ -12,7 +12,7 @@ formatAlbumName = function(name_string) {
 };
 
 getAlbumId = function(request_album_name, link_tags) {
-  var id, title;
+  var id, link, title, _i, _len;
   id = "";
   if (link_tags.length !== 0) {
     request_album_name = simplify(request_album_name);
@@ -26,13 +26,15 @@ getAlbumId = function(request_album_name, link_tags) {
         id = link_tags[0].href.match(/\/album\/(\d+)/)[1];
       }
     } else {
-      link_tags.each(function() {
-        title = formatAlbumName(this.title);
+      for (_i = 0, _len = link_tags.length; _i < _len; _i++) {
+        link = link_tags[_i];
+        title = formatAlbumName(link.title);
         console.log("title2: " + title);
         if (title === request_album_name) {
-          return id = this.href.match(/\/album\/(\d+)/)[1];
+          id = link.href.match(/\/album\/(\d+)/)[1];
+          break;
         }
-      });
+      }
     }
   }
   return id;
