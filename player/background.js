@@ -8,7 +8,7 @@ player_url = 'http://www.xiami.com/song/playlist/id/{album_id}/type/1';
 playlist = [];
 
 formatAlbumName = function(name_string) {
-  return name_string.toLowerCase().replace(/[\"\-\|&@#。·]/g, '').replace(/\s{0,3}(\[.+\]|\(.+\))$/, "").replace(/[\s]{2,}/g, ' ');
+  return name_string.toLowerCase().replace(/\"|/g, '').replace(/[\-\|&@#。·.]/g, " ").replace(/\s{0,3}(\[.+\]|\(.+\))$/, "").replace(/[\s]{2,}/g, ' ').replace(/\s$/g, '');
 };
 
 getAlbumId = function(request_album_name, link_tags) {
@@ -20,7 +20,7 @@ getAlbumId = function(request_album_name, link_tags) {
     console.log("request_album_name: " + request_album_name);
     if (link_tags.length === 1) {
       title = formatAlbumName(link_tags[0].title);
-      console.log("title: " + title);
+      console.log("title1: " + title);
       console.log(title.indexOf(request_album_name));
       if (title.indexOf(request_album_name) !== -1) {
         id = link_tags[0].href.match(/\/album\/(\d+)/)[1];
@@ -28,7 +28,7 @@ getAlbumId = function(request_album_name, link_tags) {
     } else {
       link_tags.each(function() {
         title = formatAlbumName(this.title);
-        console.log("title: " + title);
+        console.log("title2: " + title);
         if (title === request_album_name) {
           return id = this.href.match(/\/album\/(\d+)/)[1];
         }
