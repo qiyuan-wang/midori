@@ -38,13 +38,6 @@ getAlbumId = (request_album_name, link_tags) ->
         if title == request_album_name
           id = link.href.match(/\/album\/(\d+)/)[1]
           break
-      # link_tags.each ->
-#         title = formatAlbumName this.title
-#         console.log 
-#         # more strict on comparision: must equal
-#         if title == request_album_name    
-#           id = this.href.match(/\/album\/(\d+)/)[1]
-#           # console.log id
   return id
 
 createFrame = (album_id, tab_id) ->
