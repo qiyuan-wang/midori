@@ -27,8 +27,9 @@ getAlbumId = (request_album_name, link_tags) ->
       title = formatAlbumName link_tags[0].title
       console.log "title1: " + title
       # just include
+      # maybe we can assert that the only one is the one. (if have no other methods at last.)
       console.log title.indexOf(request_album_name)
-      if title.indexOf(request_album_name) != -1
+      if title.indexOf(request_album_name) != -1 or request_album_name.indexOf(title) != -1
         id = link_tags[0].href.match(/\/album\/(\d+)/)[1]
     else
       link_tags.each ->

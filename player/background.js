@@ -22,7 +22,7 @@ getAlbumId = function(request_album_name, link_tags) {
       title = formatAlbumName(link_tags[0].title);
       console.log("title1: " + title);
       console.log(title.indexOf(request_album_name));
-      if (title.indexOf(request_album_name) !== -1) {
+      if (title.indexOf(request_album_name) !== -1 || request_album_name.indexOf(title) !== -1) {
         id = link_tags[0].href.match(/\/album\/(\d+)/)[1];
       }
     } else {
