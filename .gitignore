@@ -1,6 +1,10 @@
 # chrome extension permission
 *.pem
 
+# the package file
+.crx
+
+
 # OS generated files #
 ######################
 .DS_Store
