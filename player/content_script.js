@@ -25,6 +25,8 @@ getPerformer = function() {
       });
     }
   }
+  performer = performer.replace(/(original\s)?(motion picture\s)?soundtrack/i, "").replace(/various\s?artists/i, "").replace(/\s$/g, '');
+  console.log("performer: " + performer);
   return performer;
 };
 

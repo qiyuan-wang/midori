@@ -17,6 +17,9 @@ getPerformer = ->
     else
       $performers.each ->
         performer += this.innerText + " "
+  # remove any 'soundtrack' and 'various artists'
+  performer = performer.replace(/(original\s)?(motion picture\s)?soundtrack/i, "").replace(/various\s?artists/i, "").replace(/\s$/g, '')
+  console.log "performer: " + performer
   performer
 
 queryAlbum = ->
