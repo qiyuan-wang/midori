@@ -10,8 +10,8 @@ formatAlbumName = (name_string) ->
   # 3. replace .& note with space.
   # 4. remove [Vinyl] somethin at last.
   # 5. if have 2 spaces in a row, replace it with one.
-  # 6. if last one is a space, remove it.
-  return name_string.toLowerCase().replace(/\"|/g, '').replace(/[\-\|&@#。·.:]/g, " ").replace(/\s{0,3}(\[.+\]|\(.+\))$/, "").replace(/[\s]{2,}/g, ' ').replace(/\s$/g, '')
+  # 6. if first or last one is a space, remove it.
+  return name_string.toLowerCase().replace(/\"|/g, '').replace(/[\-\|&@#。·.:]/g, " ").replace(/\s{0,3}(\[.+\]|\(.+\))$/, "").replace(/[\s]{2,}/g, ' ').replace(/(^\s|\s$)/g, '')
 
 # new method to get album id, 
 getAlbumId = (request_album_name, link_tags) ->
