@@ -7,22 +7,16 @@ single_loop = false
 is_playing = true
 
 # douban
-getPerformer = ->
-  performer = ""
-  $element = $('#info > span > span.pl').filter( -> return $(this).text().match(/表演者/))
-  if $element.length != 0
-    $performers = $element.children()
-    if $performers.length == 1
-      performer = $performers.text()
-
-  #### dump this query string if more than one performers. this is bad for some albums.
-    # else
-      # $performers.each ->
-        # performer += this.innerText + " "
-  # remove any 'soundtrack' and 'various artists'
-  performer = performer.replace(/(original\s)?(motion picture\s)?soundtrack/i, "").replace(/various\s?artist(s)?/i, "").replace(/\s$/g, '')
-  console.log "performer: " + performer
-  performer
+getPerformers = ->
+  performers = []
+  $elements = $('#info > span > span.pl').filter( -> return $(this).text().match(/表演者/))
+  if $elements.length != 0
+    $performers = $elements.children()
+    $performers.each ->
+       # remove any 'soundtrack' and 'various artists' and last space
+      performers.push this.innerText.replace(/(original\s)?(motion picture\s)?soundtrack/i, "").replace(/various\s?artist(s)?/i, "").replace(/\s$/g, '')
+  console.log "performers: " + performers
+  performers
 
 getAlbumName = ->
   album_name = $('#wrapper h1 > span')[0].innerText
@@ -34,13 +28,13 @@ queryAlbum = ->
   # get the album info(name and performer)
   $album_name = getAlbumName()
   console.log "album name: " + $album_name
-  $performer = getPerformer()
+  $performers = getPerformers()
   $(this).remove()
   tips.innerText = "连接中"
   query_info =
     type: "query" 
     album: $album_name
-    performer: $performer
+    performers: $performers
   chrome.runtime.sendMessage query_info, (response) ->
     if response.status == "not found"
       $(tips).text("虾米上貌似目前还没有这张专辑。").removeClass("dx_notice").addClass("dx_warning")
