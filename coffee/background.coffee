@@ -47,8 +47,9 @@ getAlbumId = (request_album_name, request_performers_in_array, link_tags) ->
         console.log "title2: " + title
         console.log "douban performers: " + request_performers
         # match rules:
-        # title contains and performer contains mutually
-        if (title.indexOf(request_album_name) != -1 or request_album_name.indexOf(title) != -1) && (request_performers.indexOf(performer) != -1 || performer.indexOf(request_performers) != -1)
+        # 1. title equals
+        # 2. performer contains
+        if (title == request_album_name) && (request_performers.indexOf(performer) != -1 || performer.indexOf(request_performers) != -1)
           id = link.href.match(/\/album\/(\d+)/)[1]
           break
   return id
