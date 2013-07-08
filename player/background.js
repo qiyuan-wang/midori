@@ -8,7 +8,7 @@ player_url = 'http://www.xiami.com/song/playlist/id/{album_id}/type/1';
 playlist = [];
 
 formatString = function(name_string) {
-  return name_string.toLowerCase().replace(/\"/g, '').replace(/[\-\|&@#。·.:,/]/g, " ").replace(/\s{0,3}(\[.+\]|\(.+\))$/, "").replace(/[\s]{2,}/g, ' ').replace(/(^\s|\s$)/g, '');
+  return name_string.toLowerCase().replace(/\"/g, '').replace(/[\-\|&@#。·.:,/]/g, " ").replace(/\s{1,3}(\[.+\]|\(.+\))$/, "").replace(/[\s]{2,}/g, ' ').replace(/(^\s|\s$)/g, '');
 };
 
 getAlbumId = function(request_album_name, request_performers_in_array, link_tags) {
@@ -33,6 +33,7 @@ getAlbumId = function(request_album_name, request_performers_in_array, link_tags
         title = link.title;
         performer = link.innerText.replace(title, "").replace(/\n/g, '').replace(/^\s*/, '');
         title = formatString(title);
+        performer = simplify(performer);
         performer = formatString(performer);
         console.log("performer: " + performer);
         console.log("title2: " + title);
@@ -66,6 +67,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       query_item = request.album;
     }
     query_item = simplify(query_item);
+    console.log("orginal query item: " + query_item);
     query_item = formatString(query_item);
     console.log("orginal query item: " + query_item);
     query_item = query_item.replace(/\s/g, '+').replace(/[+]{2,}/g, '+');

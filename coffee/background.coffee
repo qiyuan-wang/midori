@@ -11,7 +11,7 @@ formatString = (name_string) ->
   # 4. remove [Vinyl] somethin at last.
   # 5. if have 2 spaces in a row, replace it with one.
   # 6. if first or last one is a space, remove it.
-  return name_string.toLowerCase().replace(/\"/g, '').replace(/[\-\|&@#。·.:,/]/g, " ").replace(/\s{0,3}(\[.+\]|\(.+\))$/, "").replace(/[\s]{2,}/g, ' ').replace(/(^\s|\s$)/g, '')
+  return name_string.toLowerCase().replace(/\"/g, '').replace(/[\-\|&@#。·.:,/]/g, " ").replace(/\s{1,3}(\[.+\]|\(.+\))$/, "").replace(/[\s]{2,}/g, ' ').replace(/(^\s|\s$)/g, '')
 
 # new method to get album id, 
 getAlbumId = (request_album_name, request_performers_in_array, link_tags) ->
@@ -41,6 +41,7 @@ getAlbumId = (request_album_name, request_performers_in_array, link_tags) ->
         title = link.title
         performer = link.innerText.replace(title, "").replace(/\n/g, '').replace(/^\s*/, '')
         title = formatString title
+        performer = simplify performer
         performer = formatString performer
         console.log "performer: " + performer
         console.log "title2: " + title
@@ -68,6 +69,7 @@ chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
       query_item = request.album
     # Chinese traditional to simplified
     query_item = simplify query_item
+    console.log "orginal query item: " + query_item
     # lowercase, replace " and other puncs
     query_item = formatString query_item
     console.log "orginal query item: " + query_item
