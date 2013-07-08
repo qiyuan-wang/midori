@@ -8,7 +8,7 @@ player_url = 'http://www.xiami.com/song/playlist/id/{album_id}/type/1';
 playlist = [];
 
 formatString = function(name_string) {
-  return name_string.toLowerCase().replace(/\"/g, '').replace(/[\-\|&@#。·.:,]/g, " ").replace(/\s{0,3}(\[.+\]|\(.+\))$/, "").replace(/[\s]{2,}/g, ' ').replace(/(^\s|\s$)/g, '');
+  return name_string.toLowerCase().replace(/\"/g, '').replace(/[\-\|&@#。·.:,/]/g, " ").replace(/\s{0,3}(\[.+\]|\(.+\))$/, "").replace(/[\s]{2,}/g, ' ').replace(/(^\s|\s$)/g, '');
 };
 
 getAlbumId = function(request_album_name, request_performers_in_array, link_tags) {
