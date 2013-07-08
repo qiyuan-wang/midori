@@ -5,6 +5,12 @@
 .crx
 .zip
 
+# vim
+*.swp
+
+# node
+node_modules/
+
 # OS generated files #
 ######################
 .DS_Store
