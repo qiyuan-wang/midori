@@ -63,6 +63,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     tab = sender.tab.id;
     xhr = new XMLHttpRequest();
     xhr.open("GET", query_url + query_item, true);
+    xhr.timeout = 5000;
+    xhr.ontimeout = function() {
+      return console.log("time out 了。");
+    };
     xhr.onreadystatechange = function() {
       var album, albums;
       if (xhr.readyState === 4) {
@@ -80,7 +84,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
           }
         } else {
           return sendResponse({
-            status: "network fail"
+            status: "response timeout"
           });
         }
       }

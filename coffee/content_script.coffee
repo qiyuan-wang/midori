@@ -43,9 +43,9 @@ queryAlbum = ->
     performer: $performer
   chrome.runtime.sendMessage query_info, (response) ->
     if response.status == "not found"
-      $(tips).text("虾米貌似目前还没有这张专辑").removeClass("dx_notice").addClass("dx_warning")
-    else if response.status == "network fail"
-      $(tips).text("网络貌似挂了，刷新下吧").removeClass("dx_notice").addClass("dx_warning")
+      $(tips).text("虾米上貌似目前还没有这张专辑。").removeClass("dx_notice").addClass("dx_warning")
+    else if response.status == "response timeout"
+      $(tips).text("虾米网络不给力啊，一直不返回结果，刷新下页面重新来吧。").removeClass("dx_notice").addClass("dx_warning")
     return
   return
 
@@ -254,5 +254,5 @@ chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
     loadTrack current_track
     bindButtonsEvents()
   else if request.status == "not found"
-    $(tips).text("虾米貌似还没有人发布这张专辑").removeClass("dx_notice").addClass("dx_warning")
+    $(tips).text("虾米上貌似还没有人发布这张专辑。").removeClass("dx_notice").addClass("dx_warning")
   return

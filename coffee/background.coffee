@@ -64,6 +64,9 @@ chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
     tab = sender.tab.id
     xhr = new XMLHttpRequest()
     xhr.open "GET", query_url+query_item, true
+    xhr.timeout = 5000
+    xhr.ontimeout = ->
+      console.log "time out 了。"
     xhr.onreadystatechange = ->
       if xhr.readyState == 4
         if xhr.status == 200
@@ -76,7 +79,7 @@ chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
           else
             sendResponse {status: "not found"}
         else
-          sendResponse {status: "network fail"}
+          sendResponse {status: "response timeout"}
     xhr.send()
     return true
   if request.type == "track search"
