@@ -2,8 +2,8 @@
 *.pem
 
 # the package file
-.crx
-.zip
+*.crx
+*.zip
 
 # vim
 *.swp
