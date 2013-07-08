@@ -21,8 +21,8 @@ getPerformers = ->
 getAlbumName = ->
   album_name = $('#wrapper h1 > span')[0].innerText
   # 1. remove 'original soundtrak' kinds of thing from album name
-  # 2. remove 'ost', 'ep' etc.
-  return album_name.replace(/(:\s)?(music from the\s)?(original\s)?motion picture(\ssoundtrack)?(\sscore)?/i, "")
+  # 2. remove '\sLP','\sEP' etc.
+  return album_name.replace(/(:\s)?(music from the\s)?(original\s)?(motion picture\s)?((soundtrack)|(score))/i, "").replace(/\s*((lp)|(ep))$/i, "")
 
 queryAlbum = ->
   # get the album info(name and performer)
