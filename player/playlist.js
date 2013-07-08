@@ -50,7 +50,6 @@ if (tracks.length !== 0) {
       album: track.find('album_name').text(),
       location: decode(track.find('location').text())
     };
-    console.log(track_info.location);
     return songs.push(track_info);
   });
   playlist = {

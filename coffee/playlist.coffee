@@ -41,7 +41,7 @@ if tracks.length != 0
       artist: track.find('artist').text(),
       album: track.find('album_name').text(),
       location: decode(track.find('location').text())
-    console.log track_info.location
+    # console.log track_info.location
     songs.push track_info
   playlist =
     type: "track search"

@@ -34,8 +34,8 @@ getAlbumId = (request_album_name, request_performers_in_array, link_tags) ->
       # just test if xiami's title have the album name from douban
       # maybe we can assert that the only one is the one. (if have no other methods at last.)
       console.log title.indexOf(request_album_name)
-      if title.indexOf(request_album_name) != -1 or request_album_name.indexOf(title) != -1
-        id = link_tags[0].href.match(/\/album\/(\d+)/)[1]
+      # if title.indexOf(request_album_name) != -1 or request_album_name.indexOf(title) != -1
+      id = link_tags[0].href.match(/\/album\/(\d+)/)[1]
     else
       for link in link_tags
         title = link.title
@@ -45,7 +45,7 @@ getAlbumId = (request_album_name, request_performers_in_array, link_tags) ->
         console.log "performer: " + performer
         console.log "title2: " + title
         console.log "douban performers: " + request_performers
-        if title == request_album_name && request_performers.indexOf(performer) != -1
+        if title == request_album_name && (request_performers.indexOf(performer) != -1 || performer.indexOf(request_performers) != -1)
           id = link.href.match(/\/album\/(\d+)/)[1]
           break
   return id
