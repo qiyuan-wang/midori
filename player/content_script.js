@@ -28,7 +28,7 @@ getPerformers = function() {
 getAlbumName = function() {
   var album_name;
   album_name = $('#wrapper h1 > span')[0].innerText;
-  return album_name.replace(/(:\s)?(music from the\s)?([\(\[])?(original\s)?(motion picture\s)?((soundtrack)|(score))([\)\[])?/i, "").replace(/\s*((lp)|(ep))$/i, "");
+  return album_name.replace(/(:\s)?(music from the\s)?([\(\[])?(original\s)?(motion picture\s)?((soundtrack)|(score))([\)\[])?/i, "");
 };
 
 queryAlbum = function() {
