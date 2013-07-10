@@ -67,7 +67,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       query_item = request.album;
     }
     query_item = simplify(query_item);
-    console.log("orginal query item: " + query_item);
     query_item = formatString(query_item);
     console.log("orginal query item: " + query_item);
     query_item = query_item.replace(/\s/g, '+').replace(/[+]{2,}/g, '+');

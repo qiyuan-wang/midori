@@ -21,7 +21,6 @@ getPerformers = function() {
       return performers.push(this.innerText.replace(/(original\s)?(motion picture\s)?soundtrack/i, "").replace(/various\s?artist(s)?/i, "").replace(/\s$/g, ''));
     });
   }
-  console.log("performers: " + performers);
   return performers;
 };
 
@@ -34,7 +33,6 @@ getAlbumName = function() {
 queryAlbum = function() {
   var $album_name, $performers, query_info;
   $album_name = getAlbumName();
-  console.log("album name: " + $album_name);
   $performers = getPerformers();
   $(this).remove();
   tips.innerText = "连接中";

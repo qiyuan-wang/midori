@@ -72,7 +72,6 @@ chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
       query_item = request.album
     # Chinese traditional to simplified
     query_item = simplify query_item
-    console.log "orginal query item: " + query_item
     # lowercase, replace " and other puncs
     query_item = formatString query_item
     console.log "orginal query item: " + query_item

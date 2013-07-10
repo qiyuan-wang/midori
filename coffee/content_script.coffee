@@ -15,7 +15,7 @@ getPerformers = ->
     $performers.each ->
        # remove any 'soundtrack' and 'various artists' and last space
       performers.push this.innerText.replace(/(original\s)?(motion picture\s)?soundtrack/i, "").replace(/various\s?artist(s)?/i, "").replace(/\s$/g, '')
-  console.log "performers: " + performers
+  # console.log "performers: " + performers
   performers
 
 getAlbumName = ->
@@ -27,7 +27,7 @@ getAlbumName = ->
 queryAlbum = ->
   # get the album info(name and performer)
   $album_name = getAlbumName()
-  console.log "album name: " + $album_name
+  # console.log "album name: " + $album_name
   $performers = getPerformers()
   $(this).remove()
   tips.innerText = "连接中"
