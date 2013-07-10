@@ -218,7 +218,29 @@ bindButtonsEvents = ->
 
 removeTips = ->
   $(tips).remove()
-  
+
+# try keyboard binding
+
+# for key m
+startMidori = ->
+  if $('#dx_try_button')
+    $('#dx_try_button').trigger('click')
+  return
+
+bindKeyboardEvents = ->
+  $(document).keypress (evt) ->
+    switch evt.which
+      when 32 # space bar
+        evt.preventDefault() #prevent page rolling down
+        toggleMusic()
+      when 110 then nextTrack() # key n
+      when 112 then previousTrack() # key p
+      when 61 then increaseVolume() # key =
+      when 45 then decreaseVolume() # key -
+      when 108 then switchLoop() # key l
+      else
+    return
+       
 # insert the play section
 play_section = document.createElement('div')
 play_section.id = "dx_section"
@@ -239,6 +261,10 @@ $('.related_info').before(play_section)
 #add click event
 $('#dx_try_button').on "click", queryAlbum
 
+$(document).keypress (evt) ->
+  if evt.which is 109
+    startMidori()
+
 
 chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
   if request.status == "found"
@@ -247,6 +273,7 @@ chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
     initPlayer request.songs
     loadTrack current_track
     bindButtonsEvents()
+    bindKeyboardEvents()
   else if request.status == "not found"
     $(tips).text("虾米上貌似还没有人发布这张专辑。").removeClass("dx_notice").addClass("dx_warning")
   return
