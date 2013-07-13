@@ -277,8 +277,12 @@ $('#dx_try_button').on("click", queryAlbum);
 
 $(document).keypress(function(evt) {
   if (evt.which === 109) {
-    return startMidori();
+    startMidori();
   }
+});
+
+$('#inp-query').bind("keypress", function(evt) {
+  evt.stopPropagation();
 });
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {

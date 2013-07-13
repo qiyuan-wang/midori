@@ -262,9 +262,15 @@ $('.related_info').before(play_section)
 $('#dx_try_button').on "click", queryAlbum
 
 $(document).keypress (evt) ->
-  if evt.which is 109
+  if evt.which is 109 # key m
     startMidori()
+  return
 
+# stop event propagation to avoid keyboard shortcuts if focusing on search input element.
+$('#inp-query').bind "keypress", (evt) ->
+  evt.stopPropagation()
+  return
+  
 
 chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
   if request.status == "found"
