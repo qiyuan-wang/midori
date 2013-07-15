@@ -10,11 +10,15 @@ is_playing = true
 getPerformers = ->
   performers = []
   $elements = $('#info > span > span.pl').filter( -> return $(this).text().match(/表演者/))
-  if $elements.length != 0
-    $performers = $elements.children()
-    $performers.each ->
+  if $elements.length is 0
+    return performers
+  $performers = $elements.children()
+  $performers.each ->
        # remove any 'soundtrack' and 'various artists' and last space
-      performers.push this.innerText.replace(/(original\s)?(motion picture\s)?soundtrack/i, "").replace(/various\s?artist(s)?/i, "").replace(/\s$/g, '')
+    performers.push this.innerText
+    .replace(/(original\s)?(motion picture\s)?soundtrack/i, "")
+    .replace(/various\s?artist(s)?/i, "")
+    .replace(/\s$/g, '')
   # console.log "performers: " + performers
   performers
 
@@ -38,8 +42,9 @@ queryAlbum = ->
   chrome.runtime.sendMessage query_info, (response) ->
     if response.status == "not found"
       $(tips).text("虾米上貌似目前还没有这张专辑。").removeClass("dx_notice").addClass("dx_warning")
-    else if response.status == "response timeout"
-      $(tips).text("虾米网络不给力啊，一直不返回结果，刷新下页面重新来吧。").removeClass("dx_notice").addClass("dx_warning")
+    else if response.status == "response timeout"     
+      $(tips).text("虾米网络不给力啊，一直不返回结果，刷新下页面重新来吧。")
+      .removeClass("dx_notice").addClass("dx_warning")
     return
   return
 
@@ -273,13 +278,13 @@ $('#inp-query').bind "keypress", (evt) ->
   
 
 chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
-  if request.status == "found"
+  if request.status is "found"
     removeTips()
     createPlayerDOM()
     initPlayer request.songs
     loadTrack current_track
     bindButtonsEvents()
     bindKeyboardEvents()
-  else if request.status == "not found"
+  else if request.status is "not found"
     $(tips).text("虾米上貌似还没有人发布这张专辑。").removeClass("dx_notice").addClass("dx_warning")
   return

@@ -15,12 +15,13 @@ getPerformers = function() {
   $elements = $('#info > span > span.pl').filter(function() {
     return $(this).text().match(/表演者/);
   });
-  if ($elements.length !== 0) {
-    $performers = $elements.children();
-    $performers.each(function() {
-      return performers.push(this.innerText.replace(/(original\s)?(motion picture\s)?soundtrack/i, "").replace(/various\s?artist(s)?/i, "").replace(/\s$/g, ''));
-    });
+  if ($elements.length === 0) {
+    return performers;
   }
+  $performers = $elements.children();
+  $performers.each(function() {
+    return performers.push(this.innerText.replace(/(original\s)?(motion picture\s)?soundtrack/i, "").replace(/various\s?artist(s)?/i, "").replace(/\s$/g, ''));
+  });
   return performers;
 };
 
