@@ -8,7 +8,7 @@ player_url = 'http://www.xiami.com/song/playlist/id/{album_id}/type/1';
 playlist = [];
 
 formatString = function(name_string) {
-  return name_string.toLowerCase().replace(/\"/g, '').replace(/[\-\|&@#。·.:,/]/g, " ").replace(/\s{1,3}(\[.+\]|\(.+\))$/, "").replace(/[\s]{2,}/g, ' ').replace(/(^\s|\s$)/g, '');
+  return name_string.toLowerCase().replace(/\"/g, '').replace(/[\-\|&@#。·.:,/]/g, ' ').replace(/\s{1,3}(\[.+\]|\(.+\))$/, '').replace(/[\s]{2,}/g, ' ').replace(/(^\s|\s$)/g, '');
 };
 
 getAlbumId = function(request_album_name, request_performers_in_array, link_tags) {
@@ -59,7 +59,7 @@ createFrame = function(album_id, tab_id) {
 };
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  var iframe, msg, query_item, tab, xhr;
+  var $iframe, msg, query_item, tab, xhr;
   if (request.type === "query") {
     if (request.performers.length === 1) {
       query_item = request.performers + " " + request.album;
@@ -105,9 +105,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     return true;
   }
   if (request.type === "track search") {
-    iframe = $('iframe')[0];
-    tab = parseInt(iframe.id);
-    $(iframe).remove();
+    $iframe = $('iframe');
+    tab = parseInt($iframe.get(0).id);
+    $iframe.remove();
     if (request.status === "ready") {
       msg = {
         status: "found",

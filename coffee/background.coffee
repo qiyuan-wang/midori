@@ -11,7 +11,12 @@ formatString = (name_string) ->
   # 4. remove [Vinyl] somethin at last.
   # 5. if have 2 spaces in a row, replace it with one.
   # 6. if first or last one is a space, remove it.
-  return name_string.toLowerCase().replace(/\"/g, '').replace(/[\-\|&@#。·.:,/]/g, " ").replace(/\s{1,3}(\[.+\]|\(.+\))$/, "").replace(/[\s]{2,}/g, ' ').replace(/(^\s|\s$)/g, '')
+  return name_string.toLowerCase()
+         .replace(/\"/g, '')
+         .replace(/[\-\|&@#。·.:,/]/g, ' ')
+         .replace(/\s{1,3}(\[.+\]|\(.+\))$/, '')
+         .replace(/[\s]{2,}/g, ' ')
+         .replace(/(^\s|\s$)/g, '')
 
 # new method to get album id, 
 getAlbumId = (request_album_name, request_performers_in_array, link_tags) ->
@@ -96,13 +101,15 @@ chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
           else
             sendResponse {status: "not found"}
         else
+          # console.log "here"
+          # xhr.send()
           sendResponse {status: "response timeout"}
     xhr.send()
     return true
   if request.type == "track search"
-    iframe = $('iframe')[0]
-    tab = parseInt iframe.id
-    $(iframe).remove()
+    $iframe = $('iframe')
+    tab = parseInt $iframe.get(0).id
+    $iframe.remove()
     if request.status == "ready"
       msg =
         status: "found"
