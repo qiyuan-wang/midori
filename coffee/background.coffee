@@ -4,6 +4,11 @@ player_url = 'http://www.xiami.com/song/playlist/id/{album_id}/type/1'
 
 playlist = []
 
+# for xhr resend quest
+MAX_RETRY_TIME = 3
+TIMEOUT_DURATION = 5000
+attempts = 0
+
 formatString = (name_string) ->
   # 1. to lower case.
   # 2. remove \".
@@ -21,42 +26,44 @@ formatString = (name_string) ->
 # new method to get album id, 
 getAlbumId = (request_album_name, request_performers_in_array, link_tags) ->
   id = ""
-  if link_tags.length != 0
-    # Chinese traditional to simplified
-    request_album_name = simplify request_album_name
-    # lowercase, replace " and other puncs
-    request_album_name = formatString request_album_name
-    console.log "request_album_name: " + request_album_name
+  if link_tags.length is 0
+    return id
+  
+  # Chinese traditional to simplified
+  request_album_name = simplify request_album_name
+  # lowercase, replace " and other puncs
+  request_album_name = formatString request_album_name
+  console.log "request_album_name: " + request_album_name
+  
+  request_performers = request_performers_in_array.join(' ')
+  request_performers = simplify request_performers
+  request_performers = formatString request_performers
+  console.log "request_performer: " + request_performers
     
-    request_performers = request_performers_in_array.join(' ')
-    request_performers = simplify request_performers
-    request_performers = formatString request_performers
-    console.log "request_performer: " + request_performers
-    
-    if link_tags.length == 1
-      title = formatString link_tags[0].title
-      console.log "title1: " + title
-      # just test if xiami's title have the album name from douban
-      # maybe we can assert that the only one is the one. (if have no other methods at last.)
-      console.log title.indexOf(request_album_name)
-      # if title.indexOf(request_album_name) != -1 or request_album_name.indexOf(title) != -1
-      id = link_tags[0].href.match(/\/album\/(\d+)/)[1]
-    else
-      for link in link_tags
-        title = link.title
-        performer = link.innerText.replace(title, "").replace(/\n/g, '').replace(/^\s*/, '')
-        title = formatString title
-        performer = simplify performer
-        performer = formatString performer
-        console.log "performer: " + performer
-        console.log "title2: " + title
-        console.log "douban performers: " + request_performers
-        # match rules:
-        # 1. title equals
-        # 2. performer contains
-        if (title == request_album_name) && (request_performers.indexOf(performer) != -1 || performer.indexOf(request_performers) != -1)
-          id = link.href.match(/\/album\/(\d+)/)[1]
-          break
+  if link_tags.length == 1
+    title = formatString link_tags[0].title
+    console.log "title1: " + title
+    # just test if xiami's title have the album name from douban
+    # maybe we can assert that the only one is the one. (if have no other methods at last.)
+    console.log title.indexOf(request_album_name)
+    # if title.indexOf(request_album_name) != -1 or request_album_name.indexOf(title) != -1
+    id = link_tags[0].href.match(/\/album\/(\d+)/)[1]
+  else
+    for link in link_tags
+      title = link.title
+      performer = link.innerText.replace(title, "").replace(/\n/g, '').replace(/^\s*/, '')
+      title = formatString title
+      performer = simplify performer
+      performer = formatString performer
+      console.log "performer: " + performer
+      console.log "title2: " + title
+      console.log "douban performers: " + request_performers
+      # match rules:
+      # 1. title equals
+      # 2. performer contains
+      if (title == request_album_name) && (request_performers.indexOf(performer) != -1 || performer.indexOf(request_performers) != -1)
+        id = link.href.match(/\/album\/(\d+)/)[1]
+        break
   return id
 
 createFrame = (album_id, tab_id) ->
@@ -66,7 +73,6 @@ createFrame = (album_id, tab_id) ->
   frame.height = 0
   frame.id = tab_id
   $('#player').append(frame)
-
 
 chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
   if request.type == "query"
@@ -84,28 +90,76 @@ chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
     query_item = encodeURIComponent(query_item)
     console.log query_url+query_item
     tab = sender.tab.id
-    xhr = new XMLHttpRequest()
-    xhr.open "GET", query_url+query_item, true
-    xhr.timeout = 5000
-    xhr.ontimeout = ->
-      console.log "time out 了。"
-    xhr.onreadystatechange = ->
-      if xhr.readyState == 4
-        if xhr.status == 200
-          albums = $(xhr.responseText).find('a[class="album_result"]')
-          console.log albums[0]
-          album = getAlbumId request.album, request.performers, albums
-          console.log "album id is: " + album
-          if album != ""
-            createFrame album, tab
-          else
-            sendResponse {status: "not found"}
+    
+    # deal with the xhr
+    sendXHR = (query_url) ->
+      xhr = new XMLHttpRequest()
+      xhr.open "GET", query_url, true
+      xhr.timeout = TIMEOUT_DURATION
+      
+      # define timeout callback
+      xhrTimeout = ->
+        if typeof xhr is 'object'
+          xhr.abort()
+        if attempts < MAX_RETRY_TIME
+          console.log attempts
+          attempts++
+          # resend another request
+          sendXHR query_url
         else
-          # console.log "here"
-          # xhr.send()
+          attempts = 0
           sendResponse {status: "response timeout"}
-    xhr.send()
+        return
+      
+      # define readystatechange callback
+      xhrCallback = ->
+        if xhr.readyState is 4
+          if xhr.status is 200
+            albums = $(xhr.responseText).find('a[class="album_result"]')
+            console.log albums[0]
+            album = getAlbumId request.album, request.performers, albums
+            console.log "album id is: " + album
+            if album != ""
+              createFrame album, tab
+            else
+              sendResponse {status: "not found"}
+        return
+      
+      # set timeout and statechange callback
+      xhr.ontimeout = xhrTimeout
+      xhr.onreadystatechange = xhrCallback
+      xhr.send()
+      return
+
+    sendXHR query_url+query_item
     return true
+    
+##### old stuff
+    
+#     xhr = new XMLHttpRequest()
+#     xhr.open "GET", query_url+query_item, true
+#     xhr.timeout = 5000
+#     xhr.ontimeout = ->
+#       console.log "time out 了。"
+#     xhr.onreadystatechange = ->
+#       if xhr.readyState is 4
+#         if xhr.status is 200
+#           albums = $(xhr.responseText).find('a[class="album_result"]')
+#           console.log albums[0]
+#           album = getAlbumId request.album, request.performers, albums
+#           console.log "album id is: " + album
+#           if album != ""
+#             createFrame album, tab
+#           else
+#             sendResponse {status: "not found"}
+#         else
+#           # console.log "here"
+#           # xhr.send()
+#           sendResponse {status: "response timeout"}
+#     xhr.send()
+#     return true
+#####
+
   if request.type == "track search"
     $iframe = $('iframe')
     tab = parseInt $iframe.get(0).id

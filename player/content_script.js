@@ -36,17 +36,20 @@ queryAlbum = function() {
   $album_name = getAlbumName();
   $performers = getPerformers();
   $(this).remove();
-  tips.innerText = "连接中";
+  tips.innerText = "翻虾米找专辑中";
   query_info = {
     type: "query",
     album: $album_name,
     performers: $performers
   };
   chrome.runtime.sendMessage(query_info, function(response) {
-    if (response.status === "not found") {
-      $(tips).text("虾米上貌似目前还没有这张专辑。").removeClass("dx_notice").addClass("dx_warning");
-    } else if (response.status === "response timeout") {
-      $(tips).text("虾米网络不给力啊，一直不返回结果，刷新下页面重新来吧。").removeClass("dx_notice").addClass("dx_warning");
+    switch (response.status) {
+      case "not found":
+        $(tips).text("虾米上貌似目前还没有这张专辑。").removeClass("dx_notice").addClass("dx_warning");
+        break;
+      case "response timeout":
+        $(tips).text("虾米网络不给力啊，重试了三次都不返回结果，等会儿吧。").removeClass("dx_notice").addClass("dx_warning");
+        break;
     }
   });
 };
