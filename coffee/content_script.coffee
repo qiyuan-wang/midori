@@ -8,25 +8,36 @@ is_playing = true
 
 # douban
 getPerformers = ->
-  performers = []
+  performers = ""
   $elements = $('#info > span > span.pl').filter( -> return $(this).text().match(/表演者/))
   if $elements.length is 0
     return performers
   $performers = $elements.children()
   $performers.each ->
-       # remove any 'soundtrack' and 'various artists' and last space
-    performers.push this.innerText
-    .replace(/(original\s)?(motion picture\s)?soundtrack/i, "")
-    .replace(/various\s?artist(s)?/i, "")
-    .replace(/\s$/g, '')
-  # console.log "performers: " + performers
-  performers
+    performers += this.innerText + " "
+
+  # remove any 'soundtrack' and 'various artists' and last space
+  performers.replace(/(original\s)?(motion picture\s)?soundtrack/i, "")
+            .replace(/various\s?artist(s)?/i, "")
+            .replace(/(^\s+|\s+$)/g, '')
 
 getAlbumName = ->
-  album_name = $('#wrapper h1 > span')[0].innerText
-  # 1. remove 'original soundtrak' kinds of thing from album name
-  # 2. remove '\sLP','\sEP' etc.
-  return album_name.replace(/(:\s)?(music from the\s)?([\(\[])?(original\s)?(motion picture\s)?((soundtrack)|(score))([\)\[])?/i, "")#.replace(/\s*((lp)|(ep))$/i, "")
+  album_name = {}
+  name = $('#wrapper h1 > span')[0].innerText
+  # if it has an alias name:
+  if $('#info > span.pl').filter( -> return $(this).text().match(/又名/))
+    # the alias name text is the 3rd
+    alias = $('#info br').parent().contents()[2].textContent
+  
+  # 1. remove '[7"vinyl]' kind of things.
+  # 2. trim space at the begining and end.
+  album_name.main = name.replace(/(\(|\[)[^\s]*\s?vinyl(\]|\))/ig, '')
+                   .replace(/(^\s+|\s+$)/g, '')
+  album_name.alias = alias.replace(/(\(|\[)[^\s]*\s?vinyl(\]|\))/ig, '')
+                   .replace(/(^\s+|\s+$)/g, '')
+  album_name
+  # remove
+  #.replace(/(:\s)?(music from the\s)?([\(\[])?(original\s)?(motion picture\s)?((soundtrack)|(score))([\)\[])?/i, "")#.replace(/\s*((lp)|(ep))$/i, "")
 
 queryAlbum = ->
   # get the album info(name and performer)
@@ -35,20 +46,21 @@ queryAlbum = ->
   $performers = getPerformers()
   $(this).remove()
   tips.innerText = "翻虾米找专辑中"
+  console.log "douban_performers: " + $performers + " " + "douban_album: " + $album_name.main + " " +  "douban_alias: " + $album_name.alias
   query_info =
     type: "query" 
     album: $album_name
     performers: $performers
-  chrome.runtime.sendMessage query_info, (response) ->
-    switch response.status
-      when "not found"
-        $(tips).text("虾米上貌似目前还没有这张专辑。")
-        .removeClass("dx_notice").addClass("dx_warning")
-      when "response timeout"     
-        $(tips).text("虾米网络不给力啊，重试了三次都不返回结果，等会儿吧。")
-        .removeClass("dx_notice").addClass("dx_warning")
-      else
-    return
+  # chrome.runtime.sendMessage query_info, (response) ->
+  #   switch response.status
+  #     when "not found"
+  #       $(tips).text("虾米上貌似目前还没有这张专辑。")
+  #       .removeClass("dx_notice").addClass("dx_warning")
+  #     when "response timeout"     
+  #       $(tips).text("虾米网络不给力啊，重试了三次都不返回结果，等会儿吧。")
+  #       .removeClass("dx_notice").addClass("dx_warning")
+  #     else
+  #   return
   return
 
 createPlayerDOM = ->

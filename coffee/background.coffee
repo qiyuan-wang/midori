@@ -1,4 +1,5 @@
-query_url = 'http://www.xiami.com/ajax/search-index?key='
+# it can has a paramter for pagination
+query_url = 'http://www.xiami.com/ajax/search-index?page=1&&key='
 
 player_url = 'http://www.xiami.com/song/playlist/id/{album_id}/type/1'
 

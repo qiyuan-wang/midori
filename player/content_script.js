@@ -11,7 +11,7 @@ is_playing = true;
 
 getPerformers = function() {
   var $elements, $performers, performers;
-  performers = [];
+  performers = "";
   $elements = $('#info > span > span.pl').filter(function() {
     return $(this).text().match(/表演者/);
   });
@@ -20,15 +20,23 @@ getPerformers = function() {
   }
   $performers = $elements.children();
   $performers.each(function() {
-    return performers.push(this.innerText.replace(/(original\s)?(motion picture\s)?soundtrack/i, "").replace(/various\s?artist(s)?/i, "").replace(/\s$/g, ''));
+    return performers += this.innerText + " ";
   });
-  return performers;
+  return performers.replace(/(original\s)?(motion picture\s)?soundtrack/i, "").replace(/various\s?artist(s)?/i, "").replace(/(^\s+|\s+$)/g, '');
 };
 
 getAlbumName = function() {
-  var album_name;
-  album_name = $('#wrapper h1 > span')[0].innerText;
-  return album_name.replace(/(:\s)?(music from the\s)?([\(\[])?(original\s)?(motion picture\s)?((soundtrack)|(score))([\)\[])?/i, "");
+  var album_name, alias, name;
+  album_name = {};
+  name = $('#wrapper h1 > span')[0].innerText;
+  if ($('#info > span.pl').filter(function() {
+    return $(this).text().match(/又名/);
+  })) {
+    alias = $('#info br').parent().contents()[2].textContent;
+  }
+  album_name.main = name.replace(/(\(|\[)[^\s]*\s?vinyl(\]|\))/ig, '').replace(/(^\s+|\s+$)/g, '');
+  album_name.alias = alias.replace(/(\(|\[)[^\s]*\s?vinyl(\]|\))/ig, '').replace(/(^\s+|\s+$)/g, '');
+  return album_name;
 };
 
 queryAlbum = function() {
@@ -37,21 +45,12 @@ queryAlbum = function() {
   $performers = getPerformers();
   $(this).remove();
   tips.innerText = "翻虾米找专辑中";
+  console.log("douban_performers: " + $performers + " " + "douban_album: " + $album_name.main + " " + "douban_alias: " + $album_name.alias);
   query_info = {
     type: "query",
     album: $album_name,
     performers: $performers
   };
-  chrome.runtime.sendMessage(query_info, function(response) {
-    switch (response.status) {
-      case "not found":
-        $(tips).text("虾米上貌似目前还没有这张专辑。").removeClass("dx_notice").addClass("dx_warning");
-        break;
-      case "response timeout":
-        $(tips).text("虾米网络不给力啊，重试了三次都不返回结果，等会儿吧。").removeClass("dx_notice").addClass("dx_warning");
-        break;
-    }
-  });
 };
 
 createPlayerDOM = function() {
