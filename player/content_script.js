@@ -45,8 +45,6 @@ queryAlbum = function() {
   $performers = getPerformers();
   $(this).remove();
   tips.innerText = "翻虾米找专辑中";
-  console.log("douban_performers: " + $performers);
-  console.log("douban_album: " + $album_name.main);
   if ($album_name.alias) {
     console.log("douban_alias: " + $album_name.alias);
   }

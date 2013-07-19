@@ -41,17 +41,10 @@ getAlbumId = function(request_album_name, request_performers_in_array, link_tags
   if (request_album_name.alias) {
     db_album_alias_name = normalizeText(request_album_name.alias);
   }
-  console.log("request_album_main_name: " + db_album_main_name);
-  if (db_album_alias_name) {
-    console.log("request_album_alias_name: " + db_album_alias_name);
-  }
   db_request_performers = request_performers_in_array.join(' ');
   db_request_performers = normalizeText(db_request_performers);
-  console.log("request_performer: " + db_request_performers);
   if (link_tags.length === 1) {
     title = formatString(link_tags[0].title);
-    console.log("title1: " + title);
-    console.log(title.indexOf(db_album_main_name));
     id = link_tags[0].href.match(/\/album\/(\d+)/)[1];
   } else {
     for (_i = 0, _len = link_tags.length; _i < _len; _i++) {
@@ -60,10 +53,6 @@ getAlbumId = function(request_album_name, request_performers_in_array, link_tags
       performer = link.innerText.replace(title, "").replace(/\n/g, '').replace(/^\s*/, '');
       title = normalizeText(title);
       performer = normalizeText(performer);
-      console.log("performer: " + performer);
-      console.log("title2: " + title);
-      console.log(db_album_main_name);
-      console.log(title.indexOf(db_album_main_name));
       if ((title === db_album_main_name || title === db_album_alias_name || title.indexOf(db_album_main_name) !== -1 || title.indexOf(db_album_alias_name) !== -1) && (db_request_performers.indexOf(performer) !== -1 || performer.indexOf(db_request_performers) !== -1)) {
         id = link.href.match(/\/album\/(\d+)/)[1];
         break;
@@ -94,9 +83,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       console.log("query1: " + query_item);
     }
     query_item = normalizeText(query_item);
-    console.log("orginal query item: " + query_item);
     query_item = encodeURIComponent(query_item);
-    console.log(query_url + query_item);
     tab = sender.tab.id;
     sendXHR = function(query_url) {
       var xhr, xhrCallback, xhrTimeout;
@@ -108,7 +95,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
           xhr.abort();
         }
         if (attempts < TIMEOUT_MAX_RETRY_TIME) {
-          console.log(attempts);
           attempts++;
           sendXHR(query_url);
         } else {
@@ -123,9 +109,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         if (xhr.readyState === 4) {
           if (xhr.status === 200) {
             albums = $(xhr.responseText).find('a[class="album_result"]');
-            console.log(albums[0]);
             album = getAlbumId(request.album, request.performers, albums);
-            console.log("album id is: " + album);
             if (album !== "") {
               createFrame(album, tab);
             } else {

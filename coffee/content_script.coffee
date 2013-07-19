@@ -22,6 +22,7 @@ getPerformers = ->
 getAlbumName = ->
   album_name = {}
   name = $('#wrapper h1 > span')[0].innerText
+  
   # 1. remove '[7"vinyl]' kind of things.
   # 2. trim space at the begining and end.
   album_name.main = name.replace(/(\(|\[)[^\s]*\s?vinyl(\]|\))/ig, '')
@@ -48,8 +49,9 @@ queryAlbum = ->
   # update the tips text
   tips.innerText = "翻虾米找专辑中"
   
-  console.log "douban_performers: " + $performers
-  console.log "douban_album: " + $album_name.main
+  # console.log "douban_performers: " + $performers
+  # console.log "douban_album: " + $album_name.main
+  
   if $album_name.alias
     console.log "douban_alias: " + $album_name.alias
   
