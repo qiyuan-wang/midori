@@ -1,5 +1,4 @@
-# it can has a paramter for pagination
-query_url = 'http://www.xiami.com/ajax/search-index?page=1&&key='
+query_url = 'http://www.xiami.com/ajax/search-index?key='
 
 player_url = 'http://www.xiami.com/song/playlist/id/{album_id}/type/1'
 
@@ -10,20 +9,27 @@ TIMEOUT_MAX_RETRY_TIME = 3
 TIMEOUT_DURATION = 5000
 attempts = 0
 
+replaceCallback = (match, p1, p2, p3, offset, string) ->
+  if p2.length > 1
+    return p2
+  else
+    return match
+
 formatString = (name_string) ->
   # 1. to lower case.
-  # 2. remove \".
-  # 3. replace .& note with space.
-  # 4. remove [Vinyl] somethin at last.
-  # 5. if have 2 spaces in a row, replace it with one.
-  # 6. if first or last one is a space, remove it.
-  #.replace(/(\()(.+)(\))/g, function(match, p1, p2, p3, offset, string) { if (p2.length >1){return p2;} else {return string}})
+  # 2. replace .& note with space.
+  # 3. if have 2 spaces in a row, replace it with one.
+  # 4. if first or last one is a space, remove it.
   return name_string.toLowerCase()
-         .replace(/\"/g, '')
-         .replace(/[\-\|&@#。·.:,/]/g, ' ')
-         .replace(/\s{1,3}(\[.+\]|\(.+\))$/, '')
+         .replace(/(\()(.+)(\))/g, replaceCallback)
+         .replace(/[\"\'\-\|&@#。·.:,/]/g, ' ')
          .replace(/[\s]{2,}/g, ' ')
-         .replace(/(^\s|\s$)/g, '')
+         .replace(/(^\s+|\s+$)/g, '')
+
+normalizeText = (name_string) ->
+  name_string = simplify name_string
+  name_string = formatString name_string
+  name_string
 
 # new method to get album id, 
 getAlbumId = (request_album_name, request_performers_in_array, link_tags) ->
@@ -31,41 +37,47 @@ getAlbumId = (request_album_name, request_performers_in_array, link_tags) ->
   if link_tags.length is 0
     return id
   
-  # Chinese traditional to simplified
-  request_album_name = simplify request_album_name
-  # lowercase, replace " and other puncs
-  request_album_name = formatString request_album_name
-  console.log "request_album_name: " + request_album_name
+  # get the query words
+  db_album_main_name = normalizeText request_album_name.main
+  db_album_alias_name = normalizeText request_album_name.alias if request_album_name.alias
+
+  console.log "request_album_main_name: " + db_album_main_name
+  console.log "request_album_alias_name: " + db_album_alias_name if db_album_alias_name
   
-  request_performers = request_performers_in_array.join(' ')
-  request_performers = simplify request_performers
-  request_performers = formatString request_performers
-  console.log "request_performer: " + request_performers
+  
+  db_request_performers = request_performers_in_array.join(' ')
+  db_request_performers = normalizeText db_request_performers
+  console.log "request_performer: " + db_request_performers
     
   if link_tags.length == 1
     title = formatString link_tags[0].title
     console.log "title1: " + title
     # just test if xiami's title have the album name from douban
     # maybe we can assert that the only one is the one. (if have no other methods at last.)
-    console.log title.indexOf(request_album_name)
+    console.log title.indexOf(db_album_main_name)
     # if title.indexOf(request_album_name) != -1 or request_album_name.indexOf(title) != -1
     id = link_tags[0].href.match(/\/album\/(\d+)/)[1]
   else
     for link in link_tags
       title = link.title
       performer = link.innerText.replace(title, "").replace(/\n/g, '').replace(/^\s*/, '')
-      title = formatString title
-      performer = simplify performer
-      performer = formatString performer
+      
+      title = normalizeText title
+      performer = normalizeText performer
+      
       console.log "performer: " + performer
       console.log "title2: " + title
-      console.log "douban performers: " + request_performers
+      console.log db_album_main_name
+      console.log title.indexOf(db_album_main_name)
+      
       # match rules:
-      # 1. title equals
-      # 2. performer contains
-      if (title == request_album_name) && (request_performers.indexOf(performer) != -1 || performer.indexOf(request_performers) != -1)
+      # 1. title equals main_name or alias_name
+      # 2. or title contains main_name or alias_name
+      # 3. and perfomers contains.
+      if (title is db_album_main_name || title is db_album_alias_name || title.indexOf(db_album_main_name) isnt -1 || title.indexOf(db_album_alias_name) isnt -1) && (db_request_performers.indexOf(performer) isnt -1 || performer.indexOf(db_request_performers) isnt -1)
         id = link.href.match(/\/album\/(\d+)/)[1]
         break
+    
   return id
 
 createFrame = (album_id, tab_id) ->
@@ -79,17 +91,17 @@ createFrame = (album_id, tab_id) ->
 chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
   if request.type == "query"
     # prepare the query words
-    if request.performers.length == 1
-      query_item = request.performers + " " + request.album
+    if request.performers.length is 1
+      query_item = request.performers + " " + request.album.main
+      console.log "query1: " + query_item 
     else
-      query_item = request.album
-    # Chinese traditional to simplified
-    query_item = simplify query_item
-    # lowercase, replace " and other puncs
-    query_item = formatString query_item
+      query_item = request.album.main
+      console.log "query1: " + query_item 
+
+    query_item = normalizeText query_item
     console.log "orginal query item: " + query_item
-    query_item = query_item.replace(/\s/g, '+').replace(/[+]{2,}/g, '+')
-    query_item = encodeURIComponent(query_item)
+    # query_item = query_item.replace(/\s/g, '+').replace(/[+]{2,}/g, '+')
+    query_item = encodeURIComponent query_item
     console.log query_url+query_item
     tab = sender.tab.id
     
