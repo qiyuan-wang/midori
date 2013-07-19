@@ -6,7 +6,7 @@ player_url = 'http://www.xiami.com/song/playlist/id/{album_id}/type/1'
 playlist = []
 
 # for xhr resend quest
-MAX_RETRY_TIME = 3
+TIMEOUT_MAX_RETRY_TIME = 3
 TIMEOUT_DURATION = 5000
 attempts = 0
 
@@ -17,6 +17,7 @@ formatString = (name_string) ->
   # 4. remove [Vinyl] somethin at last.
   # 5. if have 2 spaces in a row, replace it with one.
   # 6. if first or last one is a space, remove it.
+  #.replace(/(\()(.+)(\))/g, function(match, p1, p2, p3, offset, string) { if (p2.length >1){return p2;} else {return string}})
   return name_string.toLowerCase()
          .replace(/\"/g, '')
          .replace(/[\-\|&@#。·.:,/]/g, ' ')
@@ -102,7 +103,7 @@ chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
       xhrTimeout = ->
         if typeof xhr is 'object'
           xhr.abort()
-        if attempts < MAX_RETRY_TIME
+        if attempts < TIMEOUT_MAX_RETRY_TIME
           console.log attempts
           attempts++
           # resend another request
