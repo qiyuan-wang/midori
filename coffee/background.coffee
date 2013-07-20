@@ -17,12 +17,15 @@ replaceCallback = (match, p1, p2, p3, offset, string) ->
 
 formatString = (name_string) ->
   # 1. to lower case.
-  # 2. replace .& note with space.
-  # 3. if have 2 spaces in a row, replace it with one.
-  # 4. if first or last one is a space, remove it.
+  # 2. remove [] or (), if words between them,
+  # 3. replace .& note with space.
+  # 4. remove 「通常盘」 kind of text
+  # 5. if have 2 spaces in a row, replace it with one.
+  # 6. if first or last one is a space, remove it.
   return name_string.toLowerCase()
-         .replace(/(\()(.+)(\))/g, replaceCallback)
-         .replace(/[\"\'\-\|&@#。·.:,/【】]/g, ' ')
+         .replace(/([\(\[])(.+)([\)\]])/g, replaceCallback)
+         .replace(/[\"\'\-\|&@#。·.:,/【】（）]/g, ' ')
+         .replace(/通常盘/g, '')
          .replace(/[\s]{2,}/g, ' ')
          .replace(/(^\s+|\s+$)/g, '')
 
@@ -95,18 +98,18 @@ chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
     # prepare the query words
     if request.performers.length is 1 && request.performers[0] isnt request.album.main
       query_item = request.performers + " " + request.album.main
-      # console.log "query1: " + query_item 
+      console.log "query1: " + query_item 
     else
       query_item = request.album.main
-      # console.log "query1: " + query_item 
+      console.log "query1: " + query_item 
 
     query_item = normalizeText query_item
-    # console.log "orginal query item: " + query_item
+    console.log "orginal query item: " + query_item
     
     # query_item = query_item.replace(/\s/g, '+').replace(/[+]{2,}/g, '+')
     
     query_item = encodeURIComponent query_item
-    # console.log query_url+query_item
+    console.log query_url+query_item
     
     tab = sender.tab.id
     

@@ -22,7 +22,7 @@ replaceCallback = function(match, p1, p2, p3, offset, string) {
 };
 
 formatString = function(name_string) {
-  return name_string.toLowerCase().replace(/(\()(.+)(\))/g, replaceCallback).replace(/[\"\'\-\|&@#。·.:,/【】]/g, ' ').replace(/[\s]{2,}/g, ' ').replace(/(^\s+|\s+$)/g, '');
+  return name_string.toLowerCase().replace(/([\(\[])(.+)([\)\]])/g, replaceCallback).replace(/[\"\'\-\|&@#。·.:,/【】（）]/g, ' ').replace(/通常盘/g, '').replace(/[\s]{2,}/g, ' ').replace(/(^\s+|\s+$)/g, '');
 };
 
 normalizeText = function(name_string) {
@@ -77,11 +77,15 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.type === "query") {
     if (request.performers.length === 1 && request.performers[0] !== request.album.main) {
       query_item = request.performers + " " + request.album.main;
+      console.log("query1: " + query_item);
     } else {
       query_item = request.album.main;
+      console.log("query1: " + query_item);
     }
     query_item = normalizeText(query_item);
+    console.log("orginal query item: " + query_item);
     query_item = encodeURIComponent(query_item);
+    console.log(query_url + query_item);
     tab = sender.tab.id;
     sendXHR = function(query_url) {
       var xhr, xhrCallback, xhrTimeout;
