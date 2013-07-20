@@ -93,7 +93,7 @@ createFrame = (album_id, tab_id) ->
 chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
   if request.type == "query"
     # prepare the query words
-    if request.performers.length is 1
+    if request.performers.length is 1 && request.performers[0] isnt request.album.main
       query_item = request.performers + " " + request.album.main
       console.log "query1: " + query_item 
     else
@@ -106,7 +106,7 @@ chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
     # query_item = query_item.replace(/\s/g, '+').replace(/[+]{2,}/g, '+')
     
     query_item = encodeURIComponent query_item
-    # console.log query_url+query_item
+    console.log query_url+query_item
     
     tab = sender.tab.id
     
