@@ -22,7 +22,7 @@ formatString = (name_string) ->
   # 4. if first or last one is a space, remove it.
   return name_string.toLowerCase()
          .replace(/(\()(.+)(\))/g, replaceCallback)
-         .replace(/[\"\'\-\|&@#。·.:,/]/g, ' ')
+         .replace(/[\"\'\-\|&@#。·.:,/【】]/g, ' ')
          .replace(/[\s]{2,}/g, ' ')
          .replace(/(^\s+|\s+$)/g, '')
 

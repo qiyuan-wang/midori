@@ -22,7 +22,7 @@ replaceCallback = function(match, p1, p2, p3, offset, string) {
 };
 
 formatString = function(name_string) {
-  return name_string.toLowerCase().replace(/(\()(.+)(\))/g, replaceCallback).replace(/[\"\'\-\|&@#。·.:,/]/g, ' ').replace(/[\s]{2,}/g, ' ').replace(/(^\s+|\s+$)/g, '');
+  return name_string.toLowerCase().replace(/(\()(.+)(\))/g, replaceCallback).replace(/[\"\'\-\|&@#。·.:,/【】]/g, ' ').replace(/[\s]{2,}/g, ' ').replace(/(^\s+|\s+$)/g, '');
 };
 
 normalizeText = function(name_string) {
