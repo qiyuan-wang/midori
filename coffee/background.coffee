@@ -44,16 +44,16 @@ getAlbumId = (request_album_name, request_performers_in_array, link_tags) ->
   db_album_main_name = normalizeText request_album_name.main
   db_album_alias_name = normalizeText request_album_name.alias if request_album_name.alias
 
-  # console.log "request_album_main_name: " + db_album_main_name
-  # console.log "request_album_alias_name: " + db_album_alias_name if db_album_alias_name
+  console.log "request_album_main_name: " + db_album_main_name
+  console.log "request_album_alias_name: " + db_album_alias_name if db_album_alias_name
   
   db_request_performers = request_performers_in_array.join(' ')
   db_request_performers = normalizeText db_request_performers
-  # console.log "request_performer: " + db_request_performers
+  console.log "request_performer: " + db_request_performers
     
   if link_tags.length == 1
     title = formatString link_tags[0].title
-    # console.log "title1: " + title
+    console.log "title1: " + title
     
     # just test if xiami's title have the album name from douban
     # maybe we can assert that the only one is the one. (if have no other methods at last.)
@@ -70,10 +70,10 @@ getAlbumId = (request_album_name, request_performers_in_array, link_tags) ->
       title = normalizeText title
       performer = normalizeText performer
       
-      # console.log "performer: " + performer
- #      console.log "title2: " + title
- #      console.log db_album_main_name
- #      console.log title.indexOf(db_album_main_name)
+      console.log "performer: " + performer
+      console.log "title2: " + title
+      console.log db_album_main_name
+      console.log title.indexOf(db_album_main_name)
       
       # match rules:
       # 1. title equals main_name or alias_name
@@ -97,7 +97,9 @@ chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
   if request.type == "query"
     # prepare the query words
     if request.performers.length is 1 && request.performers[0] isnt request.album.main
-      query_item = request.performers + " " + request.album.main
+      # query_item = request.performers + " " + request.album.main
+      # remove the artist query words for xiami changed its search rules
+      query_item = request.album.main
       console.log "query1: " + query_item 
     else
       query_item = request.album.main

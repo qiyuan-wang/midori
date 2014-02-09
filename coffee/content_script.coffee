@@ -59,6 +59,7 @@ queryAlbum = ->
     type: "query" 
     album: $album_name
     performers: $performers
+  
   chrome.runtime.sendMessage query_info, (response) ->
     switch response.status
       when "not found"
